@@ -68,7 +68,7 @@ public class ReservationInputForm extends JPanel {
         this.isReadOnly = formType.equals(FormType.VIEW);
 
         initConsumptionReservationMap();
-        
+
         init();
         populateForm();
     }
@@ -125,11 +125,11 @@ public class ReservationInputForm extends JPanel {
         initRoomComboBoxItem();
 
         groupName = new TextInputGroup();
-        groupName.setTitleText("Nama");
+        groupName.setTitleText("Instansi/Penyelenggara");
         inputPanel.add(groupName);
 
         groupPhoneNumber = new NumberInputGroup();
-        groupPhoneNumber.setTitleText("No. Telp");
+        groupPhoneNumber.setTitleText("No.Telp");
         inputPanel.add(groupPhoneNumber);
 
         groupAttendance = new NumberInputGroup();
@@ -147,6 +147,12 @@ public class ReservationInputForm extends JPanel {
         groupSubject = new TextInputGroup();
         groupSubject.setTitleText("Tema Kegiatan");
         inputPanel.add(groupSubject);
+        
+        groupStatus = new TextInputGroup();
+        groupStatus.setTitleText("Status");
+        groupStatus.getInputField().setEnabled(false);
+        groupStatus.getInputField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Auto-generate oleh sistem");
+        inputPanel.add(groupStatus);
 
         formPanel.add(inputPanel, "wrap");
 
@@ -177,9 +183,9 @@ public class ReservationInputForm extends JPanel {
 
             for (Room room : rooms) {
                 RoomComboBoxItem item = new RoomComboBoxItem(room);
-                
+
                 cbRoom.getInputField().addItem(item);
-                
+
                 if (reservation.getRoomId() != null && item.getModel().getId().equals(reservation.getRoomId())) {
                     cbRoom.getInputField().setSelectedItem(item);
                 }
@@ -200,7 +206,7 @@ public class ReservationInputForm extends JPanel {
     }
 
     private void initConsumptionsForm(JPanel panel) {
-        JPanel inputPanel = new JPanel(new MigLayout("ins 0, wrap"));
+        JPanel inputPanel = new JPanel(new MigLayout("ins 0, wrap 2, hidemode 3"));
         inputPanel.setOpaque(false);
 
         JLabel label = new JLabel("Konsumsi");
@@ -245,12 +251,12 @@ public class ReservationInputForm extends JPanel {
 
                 item.setSelected(isInArray);
                 itemQty.setText(isInArray ? consumptionReservationMap.get(consumption.getId()).getQty().toString() : "0");
-                
+
                 if (isReadOnly && !isInArray) {
                     consumptionItemPanel.setVisible(false);
                 }
             }
-            
+
             if (isReadOnly) {
                 item.setEnabled(false);
                 itemQty.setEnabled(false);
@@ -265,11 +271,13 @@ public class ReservationInputForm extends JPanel {
         groupName.getInputField().setText("");
         groupPhoneNumber.getInputField().setText("");
         groupSubject.getInputField().setText("");
+        groupAttendance.getInputField().setText("");
 
         groupId.hideError();
         groupName.hideError();
         groupPhoneNumber.hideError();
         groupSubject.hideError();
+        groupAttendance.hideError();
 
         for (int i = 0; i < consumptionItem.size(); i++) {
             JCheckBox item = consumptionItem.get(i);
@@ -285,11 +293,17 @@ public class ReservationInputForm extends JPanel {
         groupName.getInputField().setEnabled(false);
         groupPhoneNumber.getInputField().setEnabled(false);
         groupSubject.getInputField().setEnabled(false);
+        groupAttendance.getInputField().setEnabled(false);
+        groupStartedAt.getInputField().setEnabled(false);
+        groupEndedAt.getInputField().setEnabled(false);
 
         groupId.hideError();
         groupName.hideError();
         groupPhoneNumber.hideError();
         groupSubject.hideError();
+        groupAttendance.hideError();
+        groupStartedAt.hideError();
+        groupEndedAt.hideError();
 
         for (int i = 0; i < consumptionItem.size(); i++) {
             JCheckBox item = consumptionItem.get(i);
@@ -334,14 +348,6 @@ public class ReservationInputForm extends JPanel {
             reservation.setId(null);
         }
 
-        reservation.setRoomId(roomId);
-        reservation.setName(name);
-        reservation.setPhoneNumber(phoneNumber);
-        reservation.setSubject(subject);
-        reservation.setAttendance(Integer.valueOf(attendance));
-        reservation.setStartedAt(groupStartedAt.getTimestamp());
-        reservation.setEndedAt(groupEndedAt.getTimestamp());
-
         try {
             Validation formValidation = new Validation()
                     .addItem(new ValidationItem(groupName)
@@ -369,7 +375,19 @@ public class ReservationInputForm extends JPanel {
                 throw new Exception(formValidation.getErrorMessageString());
             }
 
-            if (!service.isDateAvailable(roomId, startedAt, endedAt)) {
+            reservation.setRoomId(roomId);
+            reservation.setName(name);
+            reservation.setPhoneNumber(phoneNumber);
+            reservation.setSubject(subject);
+            reservation.setAttendance(Integer.valueOf(attendance));
+            reservation.setStartedAt(groupStartedAt.getDateTime());
+            reservation.setEndedAt(groupEndedAt.getDateTime());
+
+            if (formType.equals(FormType.CREATE)) {
+                reservation.setStatus(Reservation.Status.BOOKED);
+            }
+
+            if (!service.isDateAvailable(roomId, startedAt, endedAt, reservation.getId())) {
                 throw new Exception("Gedung/Ruangan ini tidak tersedia untuk tanggal yang dipilih");
             }
 
@@ -404,6 +422,7 @@ public class ReservationInputForm extends JPanel {
         groupStartedAt.getInputField().setDate(reservation.getStartedAt());
         groupEndedAt.getInputField().setDate(reservation.getEndedAt());
         groupSubject.getInputField().setText(reservation.getSubject());
+        groupStatus.getInputField().setText(reservation.getStatus().toString());
 
         if (isReadOnly) {
             readOnly();
@@ -433,6 +452,7 @@ public class ReservationInputForm extends JPanel {
     private TextInputGroup groupId;
     private DateTimeInputGroup groupStartedAt;
     private DateTimeInputGroup groupEndedAt;
+    private TextInputGroup groupStatus;
     private Button cmdSave;
     private Button cmdClear;
 

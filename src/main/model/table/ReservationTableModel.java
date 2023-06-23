@@ -78,6 +78,11 @@ public class ReservationTableModel extends TableModel {
             public boolean isViewActionVisible() {
                 return true;
             }
+            
+            @Override
+            public boolean isDeleteActionVisible() {
+                return false;
+            }
 
         };
     }

@@ -1,6 +1,6 @@
 package main.util.query;
 
-import java.sql.Date;
+import java.util.Date;
 import main.util.query.clause.WhereClause;
 import java.util.ArrayList;
 import java.util.List;
@@ -634,6 +634,8 @@ public class QueryBuilder {
             preparedStatement.setFloat(index, (Float) arg);
         } else if (arg instanceof LocalDateTime) {
             preparedStatement.setTimestamp(index, Timestamp.valueOf(((LocalDateTime) arg)));
+        } else if (arg instanceof Timestamp) {
+            preparedStatement.setTimestamp(index, (Timestamp) arg);
         } else {
             preparedStatement.setString(index, (String) arg);
         }

@@ -6,8 +6,8 @@ package main.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import main.util.query.QueryUpdate;
 import main.util.query.clause.JoinClause;
@@ -27,10 +27,10 @@ public class Reservation extends Model {
     private String phoneNumber;
     private Integer attendance;
     private String subject;
-    private Timestamp startedAt;
-    private Timestamp endedAt;
-    private Timestamp checkedInAt;
-    private Timestamp checkedOutAt;
+    private Date startedAt;
+    private Date endedAt;
+    private Date checkedInAt;
+    private Date checkedOutAt;
     private Status status;
     private Room room;
     private Integer consumptionCount;
@@ -46,10 +46,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            Timestamp started_at,
-            Timestamp ended_at,
-            Timestamp checked_in_at,
-            Timestamp checked_out_at,
+            Date started_at,
+            Date ended_at,
+            Date checked_in_at,
+            Date checked_out_at,
             Status status
     ) {
         this.id = id;
@@ -72,10 +72,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            Timestamp started_at,
-            Timestamp ended_at,
-            Timestamp checked_in_at,
-            Timestamp checked_out_at,
+            Date started_at,
+            Date ended_at,
+            Date checked_in_at,
+            Date checked_out_at,
             Status status,
             Room room
     ) {
@@ -100,10 +100,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            Timestamp started_at,
-            Timestamp ended_at,
-            Timestamp checked_in_at,
-            Timestamp checked_out_at,
+            Date started_at,
+            Date ended_at,
+            Date checked_in_at,
+            Date checked_out_at,
             Status status,
             Room room,
             Integer consumptionCount
@@ -130,10 +130,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            Timestamp started_at,
-            Timestamp ended_at,
-            Timestamp checked_in_at,
-            Timestamp checked_out_at,
+            Date started_at,
+            Date ended_at,
+            Date checked_in_at,
+            Date checked_out_at,
             Status status,
             Room room,
             Integer consumptionCount,
@@ -203,35 +203,35 @@ public class Reservation extends Model {
         this.subject = subject;
     }
 
-    public Timestamp getStartedAt() {
+    public Date getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(Timestamp startedAt) {
+    public void setStartedAt(Date startedAt) {
         this.startedAt = startedAt;
     }
 
-    public Timestamp getEndedAt() {
+    public Date getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(Timestamp endedAt) {
+    public void setEndedAt(Date endedAt) {
         this.endedAt = endedAt;
     }
 
-    public Timestamp getCheckedInAt() {
+    public Date getCheckedInAt() {
         return checkedInAt;
     }
 
-    public void setCheckedInAt(Timestamp checkedInAt) {
+    public void setCheckedInAt(Date checkedInAt) {
         this.checkedInAt = checkedInAt;
     }
 
-    public Timestamp getCheckedOutAt() {
+    public Date getCheckedOutAt() {
         return checkedOutAt;
     }
 
-    public void setCheckedOutAt(Timestamp checkedOutAt) {
+    public void setCheckedOutAt(Date checkedOutAt) {
         this.checkedOutAt = checkedOutAt;
     }
 
@@ -313,14 +313,17 @@ public class Reservation extends Model {
             }
         }
 
+        query().setDebug(true);
         query()
-                .addWhere(new WhereClause(
-                        new WhereClause("name", "like", "%" + term + "%", "OR")
-                                .addSub(new WhereClause("phone_number", "like", "%" + term + "%", "OR"))
-                                .addSub(new WhereClause("attendance", "like", "%" + term + "%", "OR"))
-                                .addSub(new WhereClause("subject", "like", "%" + term + "%", "OR"))
-                                .addSub(new WhereClause("status", (int) searchStatus), searchStatus != null)
-                ));
+                .addWhere(new WhereClause()
+                        .addSub(new WhereClause("reservations.name", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("rooms.name", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("types.name", "=", term, "OR"))
+                        .addSub(new WhereClause("phone_number", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("attendance", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("subject", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("status", searchStatus), searchStatus != null)
+                );
 
         return this;
     }
@@ -384,6 +387,11 @@ public class Reservation extends Model {
         relationshipRoom();
 
         return super.all();
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" + "id=" + id + ", roomId=" + roomId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", attendance=" + attendance + ", subject=" + subject + ", startedAt=" + startedAt + ", endedAt=" + endedAt + ", checkedInAt=" + checkedInAt + ", checkedOutAt=" + checkedOutAt + ", status=" + status + '}';
     }
 
     public enum Status {

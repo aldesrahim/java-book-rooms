@@ -25,7 +25,7 @@ public class RuleNotEmpty implements Rule {
         }
         
         if (component instanceof DateTimeInputField _com) {
-            return _com.getTimestamp() != null;
+            return _com.getDateTime() != null;
         }
         
         return false;

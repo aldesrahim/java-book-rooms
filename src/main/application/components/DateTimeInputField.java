@@ -29,25 +29,17 @@ public class DateTimeInputField extends JXDatePicker {
     }
     
     public String getText() {
-        Date date = (Date) getEditor().getValue();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = getDateTime();
         
         if (date == null) {
             return null;
         }
         
-        return sdf.format(date);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     }
     
-    public Timestamp getTimestamp() {
-        Date date = (Date) getEditor().getValue();
-        
-        if (date == null) {
-            return null;
-        }
-        
-        return new Timestamp(date.getTime());
+    public Date getDateTime() {
+        return (Date) getEditor().getValue();
     }
-    
     
 }

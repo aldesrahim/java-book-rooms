@@ -15,7 +15,6 @@ import main.service.other.Response;
 import main.util.query.QueryBuilder;
 import main.util.query.QueryRaw;
 import main.util.query.clause.WhereClause;
-import main.util.query.clause.WhereInClause;
 
 /**
  *
@@ -67,7 +66,7 @@ public class ReservationService extends BaseService {
             QueryBuilder.getInstance().commit();
 
             return new Response(true, "Data berhasil disimpan");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             QueryBuilder.getInstance().rollBack();
 
             ex.printStackTrace();
@@ -96,7 +95,7 @@ public class ReservationService extends BaseService {
             QueryBuilder.getInstance().commit();
 
             return new Response(true, "Data berhasil dihapus");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             QueryBuilder.getInstance().rollBack();
 
             ex.printStackTrace();
@@ -108,9 +107,12 @@ public class ReservationService extends BaseService {
     }
 
     public boolean isDateAvailable(Long roomId, String startDate, String endDate) throws SQLException {
+        return isDateAvailable(roomId, startDate, endDate, null);
+    }
+
+    public boolean isDateAvailable(Long roomId, String startDate, String endDate, Long exceptId) throws SQLException {
 
         ResultSet rs = QueryBuilder.getInstance()
-                .setDebug(true)
                 .addSelect("COUNT(*) AS jml")
                 .setFrom((new Reservation()).getTable())
                 .addWhere(new WhereClause()
@@ -123,12 +125,13 @@ public class ReservationService extends BaseService {
                         .addSub(new WhereClause("status", "=", Reservation.Status.CHECKED_IN.toInt(), "OR"))
                 )
                 .addWhere(new WhereClause("room_id", roomId))
+                .addWhere(new WhereClause("id", "<>", exceptId), exceptId != null)
                 .fetch()
                 .get();
 
         if (rs.next()) {
             Long count = rs.getLong("jml");
-            
+
             return count.equals(Long.valueOf("0"));
         }
 

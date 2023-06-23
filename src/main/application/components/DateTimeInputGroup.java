@@ -4,7 +4,9 @@
  */
 package main.application.components;
 
-import java.sql.Timestamp;
+import com.formdev.flatlaf.util.UIScale;
+import java.awt.Dimension;
+import java.util.Date;
 
 /**
  *
@@ -13,6 +15,8 @@ import java.sql.Timestamp;
 public class DateTimeInputGroup extends InputGroup {
     public DateTimeInputGroup() {
         super(new DateTimeInputField());
+        
+        setMinimumSize(UIScale.scale(panelSize));
     }
 
     @Override
@@ -25,7 +29,16 @@ public class DateTimeInputGroup extends InputGroup {
         return getInputField().getText();
     }
     
-    public Timestamp getTimestamp() {
-        return getInputField().getTimestamp();
+    public Date getDateTime() {
+        return getInputField().getDateTime();
     }
+
+    @Override
+    public void setPanelSize(Dimension defaultSize) {
+        setMinimumSize(UIScale.scale(defaultSize));
+        
+        super.setPanelSize(defaultSize);
+    }
+    
+    
 }

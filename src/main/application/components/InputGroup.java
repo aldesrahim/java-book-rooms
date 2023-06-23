@@ -17,9 +17,9 @@ import javax.swing.JPanel;
  */
 public abstract class InputGroup<T> extends JPanel {
 
-    private final T inputComponent;
+    protected final T inputComponent;
 
-    private Dimension panelSize = new Dimension(200, 55);
+    protected Dimension panelSize = new Dimension(200, 55);
 
     public InputGroup(T inputComponent) {
         this.inputComponent = inputComponent;
@@ -42,8 +42,9 @@ public abstract class InputGroup<T> extends JPanel {
     }
 
     public void setPanelSize(Dimension defaultSize) {
-        this.panelSize = defaultSize;
         setPreferredSize(UIScale.scale(defaultSize));
+        
+        this.panelSize = defaultSize;
 
         repaint();
         revalidate();
