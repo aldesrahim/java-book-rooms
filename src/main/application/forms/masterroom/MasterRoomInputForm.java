@@ -6,6 +6,7 @@ package main.application.forms.masterroom;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
@@ -116,7 +117,7 @@ public class MasterRoomInputForm extends JPanel {
         groupId = new TextInputGroup();
         groupId.setTitleText("ID");
         groupId.getInputField().setEnabled(false);
-        groupId.setVisible(!formType.equals(FormType.CREATE));
+        groupId.getInputField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Auto-generate oleh sistem");
         inputPanel.add(groupId);
 
         cbType = new ComboBoxInputGroup<>();
@@ -130,11 +131,11 @@ public class MasterRoomInputForm extends JPanel {
 
         groupCapacity = new NumberInputGroup();
         groupCapacity.setTitleText("Kapasitas");
-        inputPanel.add(groupCapacity);
+        inputPanel.add(groupCapacity, "wrap");
 
         groupDescription = new TextInputGroup();
         groupDescription.setTitleText("Deskripsi");
-        inputPanel.add(groupDescription);
+        inputPanel.add(groupDescription, "growx, span 4");
 
         formPanel.add(inputPanel, "wrap");
 

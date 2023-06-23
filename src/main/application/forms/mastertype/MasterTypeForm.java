@@ -4,6 +4,7 @@
  */
 package main.application.forms.mastertype;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.application.components.Button;
@@ -84,6 +85,7 @@ public class MasterTypeForm extends JPanel {
         groupId = new TextInputGroup();
         groupId.setTitleText("ID");
         groupId.getInputField().setEnabled(false);
+        groupId.getInputField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Auto-generate oleh sistem");
         inputPanel.add(groupId);
 
         groupName = new TextInputGroup();
