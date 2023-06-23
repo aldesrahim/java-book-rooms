@@ -6,7 +6,6 @@ package main.application.components;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -40,14 +39,14 @@ public class DateTimeInputField extends JXDatePicker {
         return sdf.format(date);
     }
     
-    public LocalDateTime getDateTime() {
+    public Timestamp getTimestamp() {
         Date date = (Date) getEditor().getValue();
         
         if (date == null) {
             return null;
         }
         
-        return new Timestamp(date.getTime()).toLocalDateTime();
+        return new Timestamp(date.getTime());
     }
     
     

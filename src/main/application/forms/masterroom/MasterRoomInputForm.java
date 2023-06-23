@@ -6,7 +6,6 @@ package main.application.forms.masterroom;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
@@ -165,7 +164,13 @@ public class MasterRoomInputForm extends JPanel {
             List<Type> types = new Type().all();
 
             for (Type type : types) {
-                cbType.getInputField().addItem(new TypeComboBoxItem(type));
+                TypeComboBoxItem item = new TypeComboBoxItem(type);
+                
+                cbType.getInputField().addItem(item);
+
+                if (room.getTypeId() != null && item.getModel().getId().equals(room.getTypeId())) {
+                    cbType.getInputField().setSelectedItem(item);
+                }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -313,13 +318,13 @@ public class MasterRoomInputForm extends JPanel {
 
         try {
             Validation formValidation = new Validation()
-                    .addItem(new ValidationItem("Nama", groupName.getInputField())
+                    .addItem(new ValidationItem(groupName)
                             .addRule(new RuleNotEmpty())
                             .addRule(new RuleUnique("rooms", "name", isInsert ? null : id))
                     );
 
             if (!isInsert) {
-                formValidation.addItem(new ValidationItem("ID", groupId.getInputField())
+                formValidation.addItem(new ValidationItem(groupId)
                         .addRule(new RuleNotEmpty()));
             }
 
@@ -355,14 +360,6 @@ public class MasterRoomInputForm extends JPanel {
         groupName.getInputField().setText(room.getName());
         groupCapacity.getInputField().setText(room.getCapacity().toString());
         groupDescription.getInputField().setText(room.getDescription());
-
-        for (int i = 0; i < cbType.getInputField().getItemCount(); i++) {
-            TypeComboBoxItem item = (TypeComboBoxItem) cbType.getInputField().getItemAt(i);
-
-            if (item.getModel().getId().equals(room.getTypeId())) {
-                cbType.getInputField().setSelectedItem(item);
-            }
-        }
 
         if (isReadOnly) {
             initReadOnly();

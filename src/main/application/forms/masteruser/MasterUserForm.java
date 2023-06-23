@@ -229,22 +229,22 @@ public class MasterUserForm extends JPanel {
             }
             
             Validation formValidation = new Validation()
-                    .addItem(new ValidationItem("Nama", groupName.getInputField())
+                    .addItem(new ValidationItem(groupName)
                             .addRule(new RuleNotEmpty())
                     )
-                    .addItem(new ValidationItem("Username", groupUsername.getInputField())
+                    .addItem(new ValidationItem(groupUsername)
                             .addRule(new RuleNotEmpty())
                             .addRule(new RuleUnique("users", "username", isInsert ? null : id))
                     );
 
             if (!isInsert) {
                 formValidation
-                        .addItem(new ValidationItem("ID", groupId.getInputField())
+                        .addItem(new ValidationItem(groupId)
                                 .addRule(new RuleNotEmpty())
                         );
             } else {
                 formValidation
-                        .addItem(new ValidationItem("Password", groupPassword.getInputField())
+                        .addItem(new ValidationItem(groupPassword)
                                 .addRule(new RuleNotEmpty())
                         );
             }

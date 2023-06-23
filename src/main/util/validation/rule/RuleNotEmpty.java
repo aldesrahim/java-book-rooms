@@ -18,10 +18,14 @@ public class RuleNotEmpty implements Rule {
     public boolean validate(Object component) {
         if (component instanceof JTextField _com) {
             return _com.getText().isEmpty() == false;
-        } else if (component instanceof JPasswordField _com) {
+        } 
+        
+        if (component instanceof JPasswordField _com) {
             return _com.getPassword().length > 0;
-        } else if (component instanceof DateTimeInputField _com) {
-            return _com.getDateTime() != null;
+        }
+        
+        if (component instanceof DateTimeInputField _com) {
+            return _com.getTimestamp() != null;
         }
         
         return false;

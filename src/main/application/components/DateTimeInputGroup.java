@@ -4,7 +4,7 @@
  */
 package main.application.components;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 /**
  *
@@ -25,7 +25,7 @@ public class DateTimeInputGroup extends InputGroup {
         return getInputField().getText();
     }
     
-    public LocalDateTime getDateTime() {
-        return getInputField().getDateTime();
+    public Timestamp getTimestamp() {
+        return getInputField().getTimestamp();
     }
 }

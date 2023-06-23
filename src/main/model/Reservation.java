@@ -7,7 +7,6 @@ package main.model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import main.util.query.QueryUpdate;
@@ -28,10 +27,10 @@ public class Reservation extends Model {
     private String phoneNumber;
     private Integer attendance;
     private String subject;
-    private LocalDateTime startedAt;
-    private LocalDateTime endedAt;
-    private LocalDateTime checkedInAt;
-    private LocalDateTime checkedOutAt;
+    private Timestamp startedAt;
+    private Timestamp endedAt;
+    private Timestamp checkedInAt;
+    private Timestamp checkedOutAt;
     private Status status;
     private Room room;
     private Integer consumptionCount;
@@ -47,10 +46,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            LocalDateTime started_at,
-            LocalDateTime ended_at,
-            LocalDateTime checked_in_at,
-            LocalDateTime checked_out_at,
+            Timestamp started_at,
+            Timestamp ended_at,
+            Timestamp checked_in_at,
+            Timestamp checked_out_at,
             Status status
     ) {
         this.id = id;
@@ -73,10 +72,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            LocalDateTime started_at,
-            LocalDateTime ended_at,
-            LocalDateTime checked_in_at,
-            LocalDateTime checked_out_at,
+            Timestamp started_at,
+            Timestamp ended_at,
+            Timestamp checked_in_at,
+            Timestamp checked_out_at,
             Status status,
             Room room
     ) {
@@ -101,10 +100,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            LocalDateTime started_at,
-            LocalDateTime ended_at,
-            LocalDateTime checked_in_at,
-            LocalDateTime checked_out_at,
+            Timestamp started_at,
+            Timestamp ended_at,
+            Timestamp checked_in_at,
+            Timestamp checked_out_at,
             Status status,
             Room room,
             Integer consumptionCount
@@ -131,10 +130,10 @@ public class Reservation extends Model {
             String phoneNumber,
             Integer attendance,
             String subject,
-            LocalDateTime started_at,
-            LocalDateTime ended_at,
-            LocalDateTime checked_in_at,
-            LocalDateTime checked_out_at,
+            Timestamp started_at,
+            Timestamp ended_at,
+            Timestamp checked_in_at,
+            Timestamp checked_out_at,
             Status status,
             Room room,
             Integer consumptionCount,
@@ -204,35 +203,35 @@ public class Reservation extends Model {
         this.subject = subject;
     }
 
-    public LocalDateTime getStartedAt() {
+    public Timestamp getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(LocalDateTime startedAt) {
+    public void setStartedAt(Timestamp startedAt) {
         this.startedAt = startedAt;
     }
 
-    public LocalDateTime getEndedAt() {
+    public Timestamp getEndedAt() {
         return endedAt;
     }
 
-    public void setEndedAt(LocalDateTime endedAt) {
+    public void setEndedAt(Timestamp endedAt) {
         this.endedAt = endedAt;
     }
 
-    public LocalDateTime getCheckedInAt() {
+    public Timestamp getCheckedInAt() {
         return checkedInAt;
     }
 
-    public void setCheckedInAt(LocalDateTime checkedInAt) {
+    public void setCheckedInAt(Timestamp checkedInAt) {
         this.checkedInAt = checkedInAt;
     }
 
-    public LocalDateTime getCheckedOutAt() {
+    public Timestamp getCheckedOutAt() {
         return checkedOutAt;
     }
 
-    public void setCheckedOutAt(LocalDateTime checkedOutAt) {
+    public void setCheckedOutAt(Timestamp checkedOutAt) {
         this.checkedOutAt = checkedOutAt;
     }
 
@@ -282,10 +281,10 @@ public class Reservation extends Model {
                 rs.getString("phone_number"),
                 rs.getInt("attendance"),
                 rs.getString("subject"),
-                rs.getTimestamp("started_at").toLocalDateTime(),
-                rs.getTimestamp("ended_at").toLocalDateTime(),
-                rs.getTimestamp("checked_in_at").toLocalDateTime(),
-                rs.getTimestamp("checked_out_at").toLocalDateTime(),
+                rs.getTimestamp("started_at"),
+                rs.getTimestamp("ended_at"),
+                rs.getTimestamp("checked_in_at"),
+                rs.getTimestamp("checked_out_at"),
                 Status.parse(rs.getInt("status")),
                 new Room(
                         rs.getLong("room_id"),

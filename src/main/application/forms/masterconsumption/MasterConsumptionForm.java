@@ -188,13 +188,13 @@ public class MasterConsumptionForm extends JPanel {
 
         try {
             Validation formValidation = new Validation()
-                    .addItem(new ValidationItem("Nama", groupName.getInputField())
+                    .addItem(new ValidationItem(groupName)
                             .addRule(new RuleNotEmpty())
                             .addRule(new RuleUnique("consumptions", "name", isInsert ? null : id))
                     );
 
             if (!isInsert) {
-                formValidation.addItem(new ValidationItem("ID", groupId.getInputField())
+                formValidation.addItem(new ValidationItem(groupId)
                         .addRule(new RuleNotEmpty()));
             }
 

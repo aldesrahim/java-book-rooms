@@ -17,8 +17,16 @@ public class Dialog extends JOptionPane {
     
     private String title;
 
+    public Dialog() {
+        this.title = "Perhatian";
+        this.message = JOptionPane.INFORMATION_MESSAGE;
+        this.optionType = JOptionPane.DEFAULT_OPTION;
+    }
+
     public Dialog(String title) {
         this.title = title;
+        this.message = JOptionPane.INFORMATION_MESSAGE;
+        this.optionType = JOptionPane.DEFAULT_OPTION;
     }
 
     public String getTitle() {

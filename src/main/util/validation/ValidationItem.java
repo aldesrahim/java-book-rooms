@@ -4,9 +4,9 @@
  */
 package main.util.validation;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+import main.application.components.InputGroup;
 import main.util.validation.rule.Rule;
 
 /**
@@ -18,6 +18,11 @@ public class ValidationItem {
     private Object component;
     private List<Rule> rules = new ArrayList<>();
     private List<String> errorMessages = new ArrayList<>();
+
+    public ValidationItem(InputGroup inputGroup) {
+        this.name = inputGroup.getTitleText();
+        this.component = inputGroup.getInputField();
+    }
 
     public ValidationItem(String name, Object components) {
         this.name = name;

@@ -78,9 +78,9 @@ public class LoginForm extends javax.swing.JPanel {
     private void login() {
         try {
             Validation formValidation = new Validation()
-                    .addItem(new ValidationItem("Username", groupUsername.getInputField())
+                    .addItem(new ValidationItem(groupUsername)
                             .addRule(new RuleNotEmpty()))
-                    .addItem(new ValidationItem("Password", groupPassword.getInputField())
+                    .addItem(new ValidationItem(groupPassword)
                             .addRule(new RuleNotEmpty()));
             
             if (!formValidation.validate()) {
