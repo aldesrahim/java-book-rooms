@@ -31,6 +31,8 @@ public class ReservationForm extends JPanel {
      * Creates new form DefaultForm
      */
     public ReservationForm() {
+        System.out.println("Reservation init");
+        
         initComponents();
         init();
     }

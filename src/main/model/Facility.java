@@ -101,7 +101,7 @@ public class Facility extends Model {
     @Override
     public List all() throws SQLException {
         query()
-                .addOrderBy(new OrderByClause("activity_logs.created_at", "desc"));
+                .addOrderBy(new OrderByClause("facilities.created_at", "desc"));
         
         return super.all();
     }

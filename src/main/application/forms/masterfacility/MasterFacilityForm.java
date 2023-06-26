@@ -37,6 +37,8 @@ public class MasterFacilityForm extends JPanel {
      * Creates new form DefaultForm
      */
     public MasterFacilityForm() {
+        System.out.println("MasterFacility init");
+        
         initComponents();
         init();
     }

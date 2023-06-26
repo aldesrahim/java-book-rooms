@@ -37,6 +37,8 @@ public class MasterTypeForm extends JPanel {
      * Creates new form DefaultForm
      */
     public MasterTypeForm() {
+        System.out.println("MasterType init");
+        
         initComponents();
         init();
     }

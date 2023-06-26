@@ -41,6 +41,8 @@ public class MasterUserForm extends JPanel {
      * Creates new form DefaultForm
      */
     public MasterUserForm() {
+        System.out.println("MasterUser init");
+        
         initComponents();
         init();
     }

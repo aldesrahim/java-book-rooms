@@ -37,6 +37,8 @@ public class MasterConsumptionForm extends JPanel {
      * Creates new form DefaultForm
      */
     public MasterConsumptionForm() {
+        System.out.println("MasterConsumption init");
+        
         initComponents();
         init();
     }

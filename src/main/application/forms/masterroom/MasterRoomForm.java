@@ -31,6 +31,8 @@ public class MasterRoomForm extends JPanel {
      * Creates new form DefaultForm
      */
     public MasterRoomForm() {
+        System.out.println("MasterRoom init");
+        
         initComponents();
         init();
     }

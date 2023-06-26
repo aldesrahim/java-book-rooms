@@ -16,6 +16,8 @@ public class DashboardForm extends javax.swing.JPanel {
      * Creates new form DefaultForm
      */
     public DashboardForm() {
+        System.out.println("Dashboard init");
+        
         initComponents();
     }
 
