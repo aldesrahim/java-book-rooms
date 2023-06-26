@@ -26,20 +26,20 @@ public class Menu extends javax.swing.JPanel {
     private final List<MenuEvent> events = new ArrayList<>();
 
     public static Object[] menus = {
-        new MenuItem(MenuType.BUTTON, "Dashboard", DashboardForm.class.getName(), "dashboard"),
+        new MenuItem(MenuType.BUTTON, "Dashboard", MenuName.DASHBOARD, "dashboard"),
         new MenuItem(MenuType.TITLE, "MASTER"),
-        new MenuItem(MenuType.BUTTON, "Master Tipe", MasterTypeForm.class.getName(), "file"),
-        new MenuItem(MenuType.BUTTON, "Master Fasilitas", MasterFacilityForm.class.getName(), "file"),
-        new MenuItem(MenuType.BUTTON, "Master Gedung dan Ruangan", MasterRoomForm.class.getName(), "file"),
-        new MenuItem(MenuType.BUTTON, "Master Konsumsi", MasterConsumptionForm.class.getName(), "file"),
-        new MenuItem(MenuType.BUTTON, "Master Pengguna", MasterUserForm.class.getName(), "file"),
+        new MenuItem(MenuType.BUTTON, "Master Tipe", MenuName.MASTER_TYPE, "file"),
+        new MenuItem(MenuType.BUTTON, "Master Fasilitas", MenuName.MASTER_FACILITY, "file"),
+        new MenuItem(MenuType.BUTTON, "Master Gedung dan Ruangan", MenuName.MASTER_ROOM, "file"),
+        new MenuItem(MenuType.BUTTON, "Master Konsumsi", MenuName.MASTER_CONSUMPTION, "file"),
+        new MenuItem(MenuType.BUTTON, "Master Pengguna", MenuName.MASTER_USER, "file"),
         new MenuItem(MenuType.TITLE, "RESERVASI"),
-        new MenuItem(MenuType.BUTTON, "Daftar Reservasi", ReservationForm.class.getName(), "file"),
+        new MenuItem(MenuType.BUTTON, "Daftar Reservasi", MenuName.RESERVATION, "file"),
         new MenuItem(MenuType.TITLE, "LAPORAN"),
-        new MenuItem(MenuType.BUTTON, "Laporan Reservasi").setIconName("file"),
-        new MenuItem(MenuType.BUTTON, "Laporan Gedung dan Ruangan").setIconName("file"),
-        new MenuItem(MenuType.BUTTON, "Laporan Konsumsi").setIconName("file"),
-        new MenuItem(MenuType.BUTTON, "Laporan Log Aktivitas").setIconName("file"),
+        new MenuItem(MenuType.BUTTON_REPORT, "Laporan Reservasi", MenuName.REPORT_RESERVATION, "file"),
+        new MenuItem(MenuType.BUTTON_REPORT, "Laporan Gedung dan Ruangan", MenuName.REPORT_ROOM, "file"),
+        new MenuItem(MenuType.BUTTON_REPORT, "Laporan Konsumsi", MenuName.REPORT_CONSUMPTION, "file"),
+        new MenuItem(MenuType.BUTTON_REPORT, "Laporan Log Aktivitas", MenuName.REPORT_ACTIVITY_LOG, "file"),
         new MenuItem(MenuType.SEPARATOR),
         new MenuItem(MenuType.LOGOUT, "Logout").setIconName("logout"),};
 
@@ -128,7 +128,7 @@ public class Menu extends javax.swing.JPanel {
 
                         panelMenu.add(label);
                     }
-                    case BUTTON, LOGOUT -> {
+                    case BUTTON, LOGOUT, BUTTON_REPORT -> {
                         final int menuIndex = i;
 
                         JButton button = createButtonItem(menuItem.getTitle());

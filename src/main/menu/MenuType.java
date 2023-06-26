@@ -9,5 +9,5 @@ package main.menu;
  * @author aldes
  */
 public enum MenuType {
-    SEPARATOR, TITLE, BUTTON, LOGOUT
+    SEPARATOR, TITLE, BUTTON, BUTTON_REPORT, LOGOUT
 }

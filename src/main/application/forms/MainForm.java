@@ -42,7 +42,7 @@ public class MainForm extends javax.swing.JPanel {
         menu.addEvent((int menuIndex) -> {
             MenuItem item = (MenuItem) Menu.menus[menuIndex];
 
-            Object com = item.getComponent();
+            Object com = item.getMenu();
 
             if (com != null && com instanceof JPanel) {
                 showForm((JPanel) com);

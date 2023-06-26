@@ -15,8 +15,7 @@ import main.util.IconHelper;
 public class MenuItem {
     protected MenuType type;
     protected String title;
-    protected String componentName;
-    protected JPanel component;
+    protected MenuName menuName;
     protected String iconName;
     protected Icon icon;
     
@@ -29,16 +28,16 @@ public class MenuItem {
         this.title = title;
     }
 
-    public MenuItem(MenuType type, String title, String component) {
+    public MenuItem(MenuType type, String title, MenuName menuName) {
         this.type = type;
         this.title = title;
-        this.componentName = component;
+        this.menuName = menuName;
     }
 
-    public MenuItem(MenuType type, String title, String component, String iconName) {
+    public MenuItem(MenuType type, String title, MenuName menuName, String iconName) {
         this.type = type;
         this.title = title;
-        this.componentName = component;
+        this.menuName = menuName;
         this.iconName = iconName;
     }
     
@@ -61,12 +60,12 @@ public class MenuItem {
         return this;
     }
 
-    public String getComponentName() {
-        return componentName;
+    public MenuName getMenuName() {
+        return menuName;
     }
 
-    public MenuItem setComponentName(String component) {
-        this.componentName = component;
+    public MenuItem setMenuName(MenuName menuName) {
+        this.menuName = menuName;
         return this;
     }
 
@@ -79,18 +78,8 @@ public class MenuItem {
         return this;
     }
     
-    public Object getComponent() {        
-        try {
-            Object com = Class.forName(this.componentName)
-                    .getConstructor()
-                    .newInstance();
-            
-            this.component = (JPanel) com;
-        } catch (Exception ex) {
-            return null;
-        }
-        
-        return this.component;
+    public Object getMenu() {   
+        return menuName.getForm();
     }
     
     public Object getIcon() {
