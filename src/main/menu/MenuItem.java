@@ -5,7 +5,6 @@
 package main.menu;
 
 import javax.swing.Icon;
-import javax.swing.JPanel;
 import main.util.IconHelper;
 
 /**

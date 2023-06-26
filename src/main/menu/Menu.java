@@ -8,13 +8,6 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
-import main.application.forms.masterconsumption.MasterConsumptionForm;
-import main.application.forms.masterfacility.MasterFacilityForm;
-import main.application.forms.masterroom.MasterRoomForm;
-import main.application.forms.mastertype.MasterTypeForm;
-import main.application.forms.masteruser.MasterUserForm;
-import main.application.forms.other.DashboardForm;
-import main.application.forms.reservation.ReservationForm;
 import net.miginfocom.swing.MigLayout;
 
 /**
