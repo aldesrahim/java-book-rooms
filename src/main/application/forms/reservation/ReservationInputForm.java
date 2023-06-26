@@ -616,6 +616,10 @@ public class ReservationInputForm extends JPanel {
             if (!formValidation.validate()) {
                 throw new Exception(formValidation.getErrorMessageString());
             }
+            
+            if (isInsert && Application.isAuthenticated()) {
+                reservation.setUserId(Application.getAuthUser().getId());
+            }
 
             reservation.setRoomId(roomId);
             reservation.setName(name);

@@ -28,7 +28,7 @@ public class TableWithPagination extends JPanel {
     private TableModel tableModel;
 
     private final Object[] limitData = {
-        1, 10, 50, 200, 1000
+        10, 50, 200, 1000
     };
 
     private Integer currentPage = 1;

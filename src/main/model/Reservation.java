@@ -26,6 +26,7 @@ public class Reservation extends Model {
 
     private Long id;
     private Long roomId;
+    private Long userId;
     private String name;
     private String phoneNumber;
     private Integer attendance;
@@ -36,6 +37,7 @@ public class Reservation extends Model {
     private Date checkedOutAt;
     private ReservationStatus status;
     private Room room;
+    private User user;
     private Integer consumptionCount;
     private List<ConsumptionReservation> consumptionRoom = new ArrayList<>();
 
@@ -45,6 +47,7 @@ public class Reservation extends Model {
     public Reservation(
             Long id,
             Long roomId,
+            Long userId,
             String name,
             String phoneNumber,
             Integer attendance,
@@ -57,6 +60,7 @@ public class Reservation extends Model {
     ) {
         this.id = id;
         this.roomId = roomId;
+        this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
@@ -71,34 +75,7 @@ public class Reservation extends Model {
     public Reservation(
             Long id,
             Long roomId,
-            String name,
-            String phoneNumber,
-            Integer attendance,
-            String subject,
-            Date started_at,
-            Date ended_at,
-            Date checked_in_at,
-            Date checked_out_at,
-            ReservationStatus status,
-            Room room
-    ) {
-        this.id = id;
-        this.roomId = roomId;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.attendance = attendance;
-        this.subject = subject;
-        this.startedAt = started_at;
-        this.endedAt = ended_at;
-        this.checkedInAt = checked_in_at;
-        this.checkedOutAt = checked_out_at;
-        this.status = status;
-        this.room = room;
-    }
-
-    public Reservation(
-            Long id,
-            Long roomId,
+            Long userId,
             String name,
             String phoneNumber,
             Integer attendance,
@@ -109,10 +86,11 @@ public class Reservation extends Model {
             Date checked_out_at,
             ReservationStatus status,
             Room room,
-            Integer consumptionCount
+            User user
     ) {
         this.id = id;
         this.roomId = roomId;
+        this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
@@ -123,12 +101,47 @@ public class Reservation extends Model {
         this.checkedOutAt = checked_out_at;
         this.status = status;
         this.room = room;
+        this.user = user;
+    }
+
+    public Reservation(
+            Long id,
+            Long roomId,
+            Long userId,
+            String name,
+            String phoneNumber,
+            Integer attendance,
+            String subject,
+            Date started_at,
+            Date ended_at,
+            Date checked_in_at,
+            Date checked_out_at,
+            ReservationStatus status,
+            Room room,
+            User user,
+            Integer consumptionCount
+    ) {
+        this.id = id;
+        this.roomId = roomId;
+        this.userId = userId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.attendance = attendance;
+        this.subject = subject;
+        this.startedAt = started_at;
+        this.endedAt = ended_at;
+        this.checkedInAt = checked_in_at;
+        this.checkedOutAt = checked_out_at;
+        this.status = status;
+        this.room = room;
+        this.user = user;
         this.consumptionCount = consumptionCount;
     }
 
     public Reservation(
             Long id,
             Long roomId,
+            Long userId,
             String name,
             String phoneNumber,
             Integer attendance,
@@ -139,11 +152,13 @@ public class Reservation extends Model {
             Date checked_out_at,
             ReservationStatus status,
             Room room,
+            User user,
             Integer consumptionCount,
             List<ConsumptionReservation> consumptionRoom
     ) {
         this.id = id;
         this.roomId = roomId;
+        this.userId = userId;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.attendance = attendance;
@@ -154,6 +169,7 @@ public class Reservation extends Model {
         this.checkedOutAt = checked_out_at;
         this.status = status;
         this.room = room;
+        this.user = user;
         this.consumptionCount = consumptionCount;
         this.consumptionRoom = consumptionRoom;
     }
@@ -172,6 +188,14 @@ public class Reservation extends Model {
 
     public void setRoomId(Long roomId) {
         this.roomId = roomId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -254,6 +278,14 @@ public class Reservation extends Model {
         this.room = room;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Integer getConsumptionCount() {
         return consumptionCount;
     }
@@ -280,6 +312,7 @@ public class Reservation extends Model {
         return new Reservation(
                 rs.getLong("id"),
                 rs.getLong("room_id"),
+                rs.getLong("user_id"),
                 rs.getString("name"),
                 rs.getString("phone_number"),
                 rs.getInt("attendance"),
@@ -299,7 +332,8 @@ public class Reservation extends Model {
                                 rs.getLong("room_type_id"),
                                 rs.getString("type_name")
                         )
-                )
+                ),
+                new User(rs.getLong("user_id"), rs.getString("user_name"), null, null)
         );
     }
 
@@ -366,21 +400,23 @@ public class Reservation extends Model {
         return delete(getId());
     }
 
-    public void relationshipRoom() {
+    public void relationships() {
         query()
                 .addSelect("rooms.name AS room_name")
                 .addSelect("rooms.type_id AS room_type_id")
                 .addSelect("rooms.capacity AS room_capacity")
                 .addSelect("rooms.description AS room_description")
                 .addSelect("types.name AS type_name")
+                .addSelect("users.name AS user_name")
                 .addSelect("(SELECT COUNT(1) FROM consumption_reservation pivot WHERE pivot.reservation_id = reservations.id) AS consumption_count")
                 .addJoin(new JoinClause((new Room()).getTable(), new JoinOnClause("rooms.id", "reservations.room_id")))
-                .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id")));
+                .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id")))
+                .addJoin(new JoinClause((new User()).getTable(), new JoinOnClause("users.id", "reservations.user_id"), "LEFT JOIN"));
     }
 
     @Override
     public Reservation find(Object id) throws SQLException {
-        relationshipRoom();
+        relationships();
 
         QueryFetch fetch = query()
                 .addSelect("reservations.*")
@@ -410,7 +446,7 @@ public class Reservation extends Model {
 
     @Override
     public List all() throws SQLException {
-        relationshipRoom();
+        relationships();
 
         query()
                 .addSelect("reservations.*")

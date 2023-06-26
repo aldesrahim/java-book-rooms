@@ -25,7 +25,7 @@ public class Menu extends javax.swing.JPanel {
         new MenuItem(MenuType.BUTTON, "Master Fasilitas", MenuName.MASTER_FACILITY, "file"),
         new MenuItem(MenuType.BUTTON, "Master Gedung dan Ruangan", MenuName.MASTER_ROOM, "file"),
         new MenuItem(MenuType.BUTTON, "Master Konsumsi", MenuName.MASTER_CONSUMPTION, "file"),
-        new MenuItem(MenuType.BUTTON, "Master Pengguna", MenuName.MASTER_USER, "person"),
+        new MenuItem(MenuType.BUTTON, "Master Pengguna", MenuName.MASTER_USER, "file"),
         new MenuItem(MenuType.TITLE, "RESERVASI"),
         new MenuItem(MenuType.BUTTON, "Daftar Reservasi", MenuName.RESERVATION, "file"),
         new MenuItem(MenuType.TITLE, "LAPORAN"),

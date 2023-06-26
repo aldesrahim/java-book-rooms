@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Dimension;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -29,7 +30,7 @@ public abstract class InputGroup<T> extends JPanel {
     private void initComponents() {
         setOpaque(false);
 
-        lbTitle = new javax.swing.JLabel();
+        lbTitle = new JLabel();
 
         setLayout(new java.awt.BorderLayout(0, 7));
         setPreferredSize(UIScale.scale(panelSize));
@@ -57,6 +58,10 @@ public abstract class InputGroup<T> extends JPanel {
     public String getTitleText() {
         return lbTitle.getText();
     }
+    
+    public JLabel getTitle() {
+        return lbTitle;
+    }
 
     public void showError() {
         ((JComponent) inputComponent).putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
@@ -72,5 +77,5 @@ public abstract class InputGroup<T> extends JPanel {
         return inputComponent;
     }
 
-    private javax.swing.JLabel lbTitle;
+    private JLabel lbTitle;
 }
