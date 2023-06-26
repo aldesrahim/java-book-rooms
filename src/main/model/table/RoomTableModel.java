@@ -4,7 +4,9 @@
  */
 package main.model.table;
 
+import java.awt.Component;
 import java.sql.SQLException;
+import main.application.components.table.cell.ActionPanel;
 import main.application.components.table.cell.TableActionVisibility;
 import main.model.Room;
 
@@ -49,28 +51,22 @@ public class RoomTableModel extends TableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Room item = (Room) find(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return item.getName();
-
-            case 1:
-                return item.getType().getName();
-
-            case 2:
-                return item.getCapacity();
-
-            case 3:
-                return item.getDescription();
-
-            case 4:
-                return item.getFacilityCount();
-
-            case 5:
-                return item.getId();
-
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 ->
+                item.getName();
+            case 1 ->
+                item.getType().getName();
+            case 2 ->
+                item.getCapacity();
+            case 3 ->
+                item.getDescription();
+            case 4 ->
+                item.getFacilityCount();
+            case 5 ->
+                item.getId();
+            default ->
+                null;
+        };
     }
 
     @Override
@@ -78,8 +74,8 @@ public class RoomTableModel extends TableModel {
         return new TableActionVisibility() {
 
             @Override
-            public boolean isViewActionVisible() {
-                return true;
+            public void toggleViewVisibility(Component com, Integer row, Integer column) {
+                com.setVisible(true);
             }
 
         };

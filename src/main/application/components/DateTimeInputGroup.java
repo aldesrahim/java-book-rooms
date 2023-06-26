@@ -32,6 +32,10 @@ public class DateTimeInputGroup extends InputGroup {
     public Date getDateTime() {
         return getInputField().getDateTime();
     }
+    
+    public void setDateTime(Date date) {
+        getInputField().setDateTime(date);
+    }
 
     @Override
     public void setPanelSize(Dimension defaultSize) {

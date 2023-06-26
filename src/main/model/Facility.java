@@ -6,7 +6,9 @@ package main.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import main.util.query.QueryUpdate;
+import main.util.query.clause.OrderByClause;
 import main.util.query.clause.SetClause;
 import main.util.query.clause.WhereClause;
 
@@ -95,6 +97,15 @@ public class Facility extends Model {
                 rs.getString("name")
         );
     }
+
+    @Override
+    public List all() throws SQLException {
+        query()
+                .addOrderBy(new OrderByClause("activity_logs.created_at", "desc"));
+        
+        return super.all();
+    }
+    
 
     @Override
     public String toString() {

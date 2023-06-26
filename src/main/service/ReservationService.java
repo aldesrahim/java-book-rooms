@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.List;
 import main.application.Application;
+import main.application.enums.ReservationStatus;
 import main.model.ActivityLog;
 import main.model.ConsumptionReservation;
 import main.model.Reservation;
 import main.service.other.Response;
 import main.util.query.QueryBuilder;
-import main.util.query.QueryRaw;
 import main.util.query.clause.WhereClause;
 
 /**
@@ -118,11 +118,16 @@ public class ReservationService extends BaseService {
                 .addWhere(new WhereClause()
                         .addSub(
                                 new WhereClause("OR")
-                                        .addSub(new WhereClause("status", Reservation.Status.BOOKED.toInt()))
-                                        .addSub(new WhereClause("'" + startDate + "'", "<=", new QueryRaw("ended_at")))
-                                        .addSub(new WhereClause("'" + endDate + "'", ">=", new QueryRaw("started_at")))
+                                        .addSub(new WhereClause("status", ReservationStatus.BOOKED.toInt()))
+                                        //                                        .addSub(new WhereClause("'" + startDate + "'", "<=", new QueryRaw("ended_at")))
+                                        //                                        .addSub(new WhereClause("'" + endDate + "'", ">=", new QueryRaw("started_at")))
+                                        .addSub(new WhereClause("ended_at", ">=", startDate))
+                                        .addSub(new WhereClause("started_at", "<=", endDate))
                         )
-                        .addSub(new WhereClause("status", "=", Reservation.Status.CHECKED_IN.toInt(), "OR"))
+                        .addSub(new WhereClause("OR")
+                                .addSub(new WhereClause("status", "=", ReservationStatus.CHECKED_IN.toInt()))
+                                .addSub(new WhereClause("checked_in_at", "<=", startDate))
+                        )
                 )
                 .addWhere(new WhereClause("room_id", roomId))
                 .addWhere(new WhereClause("id", "<>", exceptId), exceptId != null)
@@ -136,5 +141,128 @@ public class ReservationService extends BaseService {
         }
 
         return !rs.next();
+    }
+
+    public Response cancel(Reservation reservation) {
+        QueryBuilder.getInstance().beginTransaction();
+
+        try {
+            reservation.save();
+
+            if (Application.isAuthenticated()) {
+                new ActivityLog(
+                        null,
+                        Application.getAuthUser().getId(),
+                        reservation.getClass().getName(),
+                        reservation.getId(),
+                        reservation.toString(),
+                        String.format("%s Reservasi [%s]",
+                                "Membatalkan",
+                                reservation.getName()
+                        )
+                ).save();
+            }
+
+            QueryBuilder.getInstance().commit();
+
+            return new Response(true, "Reservasi berhasil dibatalkan");
+        } catch (Exception ex) {
+            QueryBuilder.getInstance().rollBack();
+
+            ex.printStackTrace();
+
+            return new Response(false, "Reservasi gagal dibatalkan");
+        }
+    }
+
+    public Response checkIn(Reservation reservation) {
+        QueryBuilder.getInstance().beginTransaction();
+
+        try {
+            ResultSet rs = QueryBuilder.getInstance()
+                    .addSelect("COUNT(*) AS jml")
+                    .setFrom(new Reservation().getTable())
+                    .addWhere(new WhereClause("id", "<>", reservation.getId()))
+                    .addWhere(new WhereClause("room_id", reservation.getRoomId()))
+                    .addWhere(new WhereClause()
+                            .addSub(new WhereClause("OR")
+                                    .addSub(new WhereClause("status", "=", ReservationStatus.CHECKED_IN.toInt()))
+                                    .addSub(new WhereClause("checked_in_at", "<=", reservation.getCheckedInAt()))
+                            )
+                            .addSub(new WhereClause("OR")
+                                    .addSub(new WhereClause("status", "=", ReservationStatus.BOOKED.toInt()))
+                                    .addSub(new WhereClause("started_at", "<=", reservation.getCheckedInAt()))
+                            )
+                    )
+                    .fetch()
+                    .get();
+
+            if (rs.next()) {
+                Long count = rs.getLong("jml");
+
+                if (!count.equals(Long.valueOf("0"))) {
+                    throw new Exception("Gedung/Ruangan ini tidak tersedia untuk tanggal check in yang dipilih");
+                }
+            }
+
+            reservation.save();
+
+            if (Application.isAuthenticated()) {
+                new ActivityLog(
+                        null,
+                        Application.getAuthUser().getId(),
+                        reservation.getClass().getName(),
+                        reservation.getId(),
+                        reservation.toString(),
+                        String.format("%s Reservasi [%s]",
+                                "Check In",
+                                reservation.getName()
+                        )
+                ).save();
+            }
+
+            QueryBuilder.getInstance().commit();
+
+            return new Response(true, "Check in berhasil");
+        } catch (Exception ex) {
+            QueryBuilder.getInstance().rollBack();
+
+            ex.printStackTrace();
+
+            return new Response(false, "Check in gagal");
+        }
+    }
+
+    public Response checkOut(Reservation reservation) {
+        QueryBuilder.getInstance().beginTransaction();
+
+        try {
+
+            reservation.save();
+
+            if (Application.isAuthenticated()) {
+                new ActivityLog(
+                        null,
+                        Application.getAuthUser().getId(),
+                        reservation.getClass().getName(),
+                        reservation.getId(),
+                        reservation.toString(),
+                        String.format("%s Reservasi [%s]",
+                                "Check Out",
+                                reservation.getName()
+                        )
+                ).save();
+            }
+
+            QueryBuilder.getInstance().commit();
+
+            return new Response(true, "Check out berhasil");
+        } catch (Exception ex) {
+            QueryBuilder.getInstance().rollBack();
+
+            ex.printStackTrace();
+
+            return new Response(false, "Check out gagal");
+        }
     }
 }

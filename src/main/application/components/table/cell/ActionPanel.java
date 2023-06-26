@@ -61,22 +61,10 @@ public class ActionPanel extends JPanel {
         });
     }
 
-    public void setActionVisibility(TableActionVisibility actionVisibility) {
-        setCmdViewVisibile(actionVisibility.isViewActionVisible());
-        setCmdEditVisibile(actionVisibility.isEditActionVisible());
-        setCmdDeleteVisibile(actionVisibility.isDeleteActionVisible());
-    }
-
-    public void setCmdEditVisibile(boolean visible) {
-        cmdEdit.setVisible(visible);
-    }
-
-    public void setCmdDeleteVisibile(boolean visible) {
-        cmdDelete.setVisible(visible);
-    }
-
-    public void setCmdViewVisibile(boolean visible) {
-        cmdView.setVisible(visible);
+    public void setActionVisibility(TableActionVisibility actionVisibility, Integer row, Integer column) {
+        actionVisibility.toggleViewVisibility(cmdView, row, column);
+        actionVisibility.toggleEditVisibility(cmdEdit, row, column);
+        actionVisibility.toggleDeleteVisibility(cmdDelete, row, column);
     }
 
     private ActionButton cmdEdit;

@@ -22,6 +22,14 @@ public class Validation {
         return this;
     }
 
+    public Validation addItem(ValidationItem component, boolean status) {
+        if (status) {
+            addItem(component);
+        }
+        
+        return this;
+    }
+
     public Validation addErrorMessage(String message) {
         errorMessages.add(message);
         return this;

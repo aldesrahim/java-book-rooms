@@ -15,7 +15,6 @@ import javax.swing.JTable;
 import main.application.components.table.cell.TableActionCellEditor;
 import main.application.components.table.cell.TableActionCellRender;
 import main.application.components.table.cell.TableActionEvent;
-import main.application.components.table.cell.TableActionVisibility;
 import main.model.Model;
 import main.model.table.TableModel;
 import net.miginfocom.swing.MigLayout;
@@ -29,7 +28,7 @@ public class TableWithPagination extends JPanel {
     private TableModel tableModel;
 
     private final Object[] limitData = {
-        10, 50, 200, 1000
+        1, 10, 50, 200, 1000
     };
 
     private Integer currentPage = 1;
@@ -54,7 +53,7 @@ public class TableWithPagination extends JPanel {
     private void initPagination() {
         perPage = Integer.valueOf(selPerPage.getSelectedItem().toString());
         totalData = tableModel.getAllRowCount().intValue();
-        totalPage = ((Double) Math.ceil(totalData.doubleValue() / perPage.doubleValue())).intValue();
+        totalPage = totalData <= 0 ? 1 : ((Double) Math.ceil(totalData.doubleValue() / perPage.doubleValue())).intValue();
         offset = perPage * (currentPage - 1);
         offset = offset == 0 ? 1 : offset + 1;
 
@@ -85,6 +84,7 @@ public class TableWithPagination extends JPanel {
 
         scroll.repaint();
         scroll.revalidate();
+        table.repaint();
     }
 
     private void initEvents() {
@@ -179,15 +179,18 @@ public class TableWithPagination extends JPanel {
     }
 
     public void setAction(int columnIndex, TableActionEvent event) {
-        TableActionVisibility actionVisibility = tableModel.getActionVisiblity();
-        TableActionCellRender cellRenderer = new TableActionCellRender(actionVisibility);
-        TableActionCellEditor cellEditor = new TableActionCellEditor(event, actionVisibility);
+        TableActionCellRender cellRenderer = new TableActionCellRender();
+        TableActionCellEditor cellEditor = new TableActionCellEditor(event);
 
         getTable().getColumnModel().getColumn(columnIndex).setCellRenderer(cellRenderer);
         getTable().getColumnModel().getColumn(columnIndex).setCellEditor(cellEditor);
         getTable().getColumnModel().getColumn(columnIndex).setPreferredWidth(130);
         getTable().getColumnModel().getColumn(columnIndex).setMaxWidth(130);
         getTable().setRowHeight(40);
+    }
+
+    public void refresh() {
+        initPagination();
     }
 
     public JTable getTable() {

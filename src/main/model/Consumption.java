@@ -6,7 +6,9 @@ package main.model;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.List;
 import main.util.query.QueryUpdate;
+import main.util.query.clause.OrderByClause;
 import main.util.query.clause.SetClause;
 import main.util.query.clause.WhereClause;
 
@@ -94,6 +96,14 @@ public class Consumption extends Model {
                 rs.getLong("id"),
                 rs.getString("name")
         );
+    }
+
+    @Override
+    public List all() throws SQLException {
+        query()
+                .addOrderBy(new OrderByClause("consumptions.created_at", "desc"));
+        
+        return super.all();
     }
 
     @Override

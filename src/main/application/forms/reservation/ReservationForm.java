@@ -41,7 +41,7 @@ public class ReservationForm extends JPanel {
         header = new HeaderWithButton((ae) -> {
             Application.showForm(new ReservationInputForm());
         });
-        header.setTitleText("Master Gedung dan Ruangan");
+        header.setTitleText("Reservasi");
         header.setButtonText("Tambah");
         panel.add(header, "growx, wrap");
 
@@ -76,7 +76,7 @@ public class ReservationForm extends JPanel {
 
         });
 
-        TableWithPagination table = new TableWithPagination(model);
+        table = new TableWithPagination(model);
         panel.add(table, "wrap, growx");
     }
 
@@ -137,6 +137,7 @@ public class ReservationForm extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private HeaderWithButton header;
+    private TableWithPagination table;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private main.application.components.BodyPanel bodyPanel;

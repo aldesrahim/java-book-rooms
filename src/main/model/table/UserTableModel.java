@@ -4,8 +4,10 @@
  */
 package main.model.table;
 
+import java.awt.Component;
 import java.sql.SQLException;
 import main.application.Application;
+import main.application.components.table.cell.ActionPanel;
 import main.application.components.table.cell.TableActionVisibility;
 import main.model.User;
 
@@ -50,19 +52,16 @@ public class UserTableModel extends TableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         User item = (User) find(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return item.getName();
-
-            case 1:
-                return item.getUsername();
-
-            case 2:
-                return item.getId();
-
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 ->
+                item.getName();
+            case 1 ->
+                item.getUsername();
+            case 2 ->
+                item.getId();
+            default ->
+                null;
+        };
     }
 
     @Override
@@ -71,29 +70,32 @@ public class UserTableModel extends TableModel {
 
         return new TableActionVisibility() {
             @Override
-            public boolean isDeleteActionVisible() {
-                User user = (User) thisModel.find(getRow());
+            public void toggleDeleteVisibility(Component com, Integer row, Integer column) {
+                User user = (User) thisModel.find(row);
 
                 if (user.isAdmin()) {
-                    return false;
+                    com.setVisible(false);
+                    return;
                 }
 
                 if (Application.getAuthUser().isAdmin()) {
-                    return true;
+                    com.setVisible(true);
+                    return;
                 }
 
-                return false;
+                com.setVisible(false);
             }
 
             @Override
-            public boolean isEditActionVisible() {
-                User user = (User) thisModel.find(getRow());
+            public void toggleEditVisibility(Component com, Integer row, Integer column) {
+                User user = (User) thisModel.find(row);
 
                 if (Application.isAuthenticated()) {
-                    return Application.getAuthUser().isAdmin() || user.getId().equals(Application.getAuthUser().getId());
+                    com.setVisible(Application.getAuthUser().isAdmin() || user.getId().equals(Application.getAuthUser().getId()));
+                    return;
                 }
 
-                return !user.isAdmin();
+                com.setVisible(!user.isAdmin());
             }
 
         };

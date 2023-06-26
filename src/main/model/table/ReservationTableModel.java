@@ -4,8 +4,14 @@
  */
 package main.model.table;
 
+import java.awt.Component;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import main.application.Application;
 import main.application.components.table.cell.TableActionVisibility;
+import main.application.enums.ReservationStatus;
 import main.model.Reservation;
 
 /**
@@ -16,7 +22,7 @@ public class ReservationTableModel extends TableModel {
 
     public ReservationTableModel() {
         this.model = new Reservation();
-        this.actionIndex = 4;
+        this.actionIndex = 8;
     }
 
     @Override
@@ -42,32 +48,37 @@ public class ReservationTableModel extends TableModel {
 
     @Override
     public String[] getHeaders() {
-        return new String[]{"Instansi/Penyelenggara", "No.Telp", "Status", "Gedung/Ruangan", "Aksi"};
+        return new String[]{"Instansi/Penyelenggara", "No.Telp", "Status", "Gedung/Ruangan", "Dari Tgl Reservasi", "Sampai Tgl Reservasi", "Tgl Check In", "Tgl Check Out", "Aksi"};
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         Reservation item = (Reservation) find(rowIndex);
 
-        switch (columnIndex) {
-            case 0:
-                return item.getName();
+        DateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy HH:mm", new Locale("id", "ID"));
 
-            case 1:
-                return item.getPhoneNumber();
-
-            case 2:
-                return item.getStatus().toString();
-
-            case 3:
-                return item.getRoom().getName();
-
-            case 4:
-                return item.getId();
-
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 ->
+                item.getName();
+            case 1 ->
+                item.getPhoneNumber();
+            case 2 ->
+                item.getStatus().toString();
+            case 3 ->
+                item.getRoom().getName();
+            case 4 ->
+                (item.getStartedAt() != null ? dateFormat.format(item.getStartedAt()) : "");
+            case 5 ->
+                (item.getEndedAt() != null ? dateFormat.format(item.getEndedAt()) : "");
+            case 6 ->
+                (item.getCheckedInAt() != null ? dateFormat.format(item.getCheckedInAt()) : "");
+            case 7 ->
+                (item.getCheckedOutAt() != null ? dateFormat.format(item.getCheckedOutAt()) : "");
+            case 8 ->
+                item.getId();
+            default ->
+                null;
+        };
     }
 
     @Override
@@ -75,13 +86,30 @@ public class ReservationTableModel extends TableModel {
         return new TableActionVisibility() {
 
             @Override
-            public boolean isViewActionVisible() {
-                return true;
+            public void toggleViewVisibility(Component com, Integer row, Integer column) {
+                com.setVisible(true);
             }
-            
+
             @Override
-            public boolean isDeleteActionVisible() {
-                return false;
+            public void toggleEditVisibility(Component com, Integer row, Integer column) {
+                Reservation item = (Reservation) find(row);
+
+                if (!item.getStatus().equals(ReservationStatus.BOOKED)) {
+                    com.setVisible(false);
+                    return;
+                }
+
+                if (Application.isAuthenticated()) {
+                    com.setVisible(Application.getAuthUser().isAdmin());
+                    return;
+                }
+
+                com.setVisible(false);
+            }
+
+            @Override
+            public void toggleDeleteVisibility(Component com, Integer row, Integer column) {
+                com.setVisible(false);
             }
 
         };

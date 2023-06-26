@@ -14,6 +14,9 @@ import main.util.query.clause.JoinClause;
 import main.util.query.clause.JoinOnClause;
 import main.util.query.clause.SetClause;
 import main.util.query.clause.WhereClause;
+import main.application.enums.ReservationStatus;
+import main.util.query.QueryFetch;
+import main.util.query.clause.OrderByClause;
 
 /**
  *
@@ -31,7 +34,7 @@ public class Reservation extends Model {
     private Date endedAt;
     private Date checkedInAt;
     private Date checkedOutAt;
-    private Status status;
+    private ReservationStatus status;
     private Room room;
     private Integer consumptionCount;
     private List<ConsumptionReservation> consumptionRoom = new ArrayList<>();
@@ -50,7 +53,7 @@ public class Reservation extends Model {
             Date ended_at,
             Date checked_in_at,
             Date checked_out_at,
-            Status status
+            ReservationStatus status
     ) {
         this.id = id;
         this.roomId = roomId;
@@ -76,7 +79,7 @@ public class Reservation extends Model {
             Date ended_at,
             Date checked_in_at,
             Date checked_out_at,
-            Status status,
+            ReservationStatus status,
             Room room
     ) {
         this.id = id;
@@ -104,7 +107,7 @@ public class Reservation extends Model {
             Date ended_at,
             Date checked_in_at,
             Date checked_out_at,
-            Status status,
+            ReservationStatus status,
             Room room,
             Integer consumptionCount
     ) {
@@ -134,7 +137,7 @@ public class Reservation extends Model {
             Date ended_at,
             Date checked_in_at,
             Date checked_out_at,
-            Status status,
+            ReservationStatus status,
             Room room,
             Integer consumptionCount,
             List<ConsumptionReservation> consumptionRoom
@@ -235,11 +238,11 @@ public class Reservation extends Model {
         this.checkedOutAt = checkedOutAt;
     }
 
-    public Status getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ReservationStatus status) {
         this.status = status;
     }
 
@@ -273,7 +276,7 @@ public class Reservation extends Model {
     }
 
     @Override
-    public Object fromResultSet(ResultSet rs) throws SQLException {
+    public Reservation fromResultSet(ResultSet rs) throws SQLException {
         return new Reservation(
                 rs.getLong("id"),
                 rs.getLong("room_id"),
@@ -285,7 +288,7 @@ public class Reservation extends Model {
                 rs.getTimestamp("ended_at"),
                 rs.getTimestamp("checked_in_at"),
                 rs.getTimestamp("checked_out_at"),
-                Status.parse(rs.getInt("status")),
+                ReservationStatus.parse(rs.getInt("status")),
                 new Room(
                         rs.getLong("room_id"),
                         rs.getLong("room_type_id"),
@@ -306,10 +309,10 @@ public class Reservation extends Model {
             return this;
         }
 
-        Integer searchStatus = null;
-        for (Status item : Status.values()) {
+        Integer searchReservationStatus = null;
+        for (ReservationStatus item : ReservationStatus.values()) {
             if (term.equalsIgnoreCase(item.toString())) {
-                searchStatus = item.toInt();
+                searchReservationStatus = item.toInt();
             }
         }
 
@@ -322,7 +325,7 @@ public class Reservation extends Model {
                         .addSub(new WhereClause("phone_number", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("attendance", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("subject", "like", "%" + term + "%", "OR"))
-                        .addSub(new WhereClause("status", searchStatus), searchStatus != null)
+                        .addSub(new WhereClause("status", searchReservationStatus), searchReservationStatus != null)
                 );
 
         return this;
@@ -365,12 +368,12 @@ public class Reservation extends Model {
 
     public void relationshipRoom() {
         query()
-                .addSelect("reservations.*")
                 .addSelect("rooms.name AS room_name")
                 .addSelect("rooms.type_id AS room_type_id")
                 .addSelect("rooms.capacity AS room_capacity")
                 .addSelect("rooms.description AS room_description")
                 .addSelect("types.name AS type_name")
+                .addSelect("(SELECT COUNT(1) FROM consumption_reservation pivot WHERE pivot.reservation_id = reservations.id) AS consumption_count")
                 .addJoin(new JoinClause((new Room()).getTable(), new JoinOnClause("rooms.id", "reservations.room_id")))
                 .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id")));
     }
@@ -379,12 +382,39 @@ public class Reservation extends Model {
     public Reservation find(Object id) throws SQLException {
         relationshipRoom();
 
-        return (Reservation) super.find(id);
+        QueryFetch fetch = query()
+                .addSelect("reservations.*")
+                .addWhere(new WhereClause(getPrimaryKey(), id))
+                .fetch();
+
+        ResultSet rs = fetch.get();
+
+        if (!rs.next()) {
+            return null;
+        }
+
+        Reservation item = fromResultSet(rs);
+
+        ConsumptionReservation pivot = new ConsumptionReservation();
+        ResultSet rsPivot = pivot.query()
+                .addWhere(new WhereClause("reservation_id", id))
+                .fetch()
+                .get();
+
+        while (rsPivot.next()) {
+            item.addConsumptionReservation(pivot.fromResultSet(rsPivot));
+        }
+
+        return item;
     }
 
     @Override
     public List all() throws SQLException {
         relationshipRoom();
+
+        query()
+                .addSelect("reservations.*")
+                .addOrderBy(new OrderByClause("reservations.created_at", "desc"));
 
         return super.all();
     }
@@ -392,51 +422,5 @@ public class Reservation extends Model {
     @Override
     public String toString() {
         return "Reservation{" + "id=" + id + ", roomId=" + roomId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", attendance=" + attendance + ", subject=" + subject + ", startedAt=" + startedAt + ", endedAt=" + endedAt + ", checkedInAt=" + checkedInAt + ", checkedOutAt=" + checkedOutAt + ", status=" + status + '}';
-    }
-
-    public enum Status {
-        BOOKED, CHECKED_IN, CHECKED_OUT, CANCELED;
-
-        @Override
-        public String toString() {
-            return switch (this) {
-                case BOOKED ->
-                    "Dipesan";
-                case CHECKED_IN ->
-                    "Check In";
-                case CHECKED_OUT ->
-                    "Check Out";
-                default ->
-                    "Dibatalkan";
-            };
-        }
-
-        public Integer toInt() {
-            return switch (this) {
-                case BOOKED ->
-                    0;
-                case CHECKED_IN ->
-                    1;
-                case CHECKED_OUT ->
-                    2;
-                default ->
-                    3;
-            };
-        }
-
-        public static Status parse(int status) {
-            return switch (status) {
-                case 0 ->
-                    BOOKED;
-                case 1 ->
-                    CHECKED_IN;
-                case 2 ->
-                    CHECKED_OUT;
-                default ->
-                    CANCELED;
-            };
-
-        }
-
     }
 }

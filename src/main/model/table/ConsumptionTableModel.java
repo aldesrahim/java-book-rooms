@@ -46,16 +46,11 @@ public class ConsumptionTableModel extends TableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Consumption item = (Consumption) find(rowIndex);
         
-        switch (columnIndex) {
-            case 0:
-                return item.getName();
-                
-            case 1:
-                return item.getId();
-                
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 -> item.getName();
+            case 1 -> item.getId();
+            default -> null;
+        };
     }
 
 }

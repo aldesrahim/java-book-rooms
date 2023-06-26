@@ -26,4 +26,12 @@ public class ComboBoxInputGroup<T> extends InputGroup {
     public String getInputValue() {
         return getInputField().getSelectedItem().toString();
     }
+    
+    public Object getSelectedItem() {
+        return getInputField().getSelectedItem();
+    }
+    
+    public Object getSelectedIndex() {
+        return getInputField().getSelectedIndex();
+    }
 }

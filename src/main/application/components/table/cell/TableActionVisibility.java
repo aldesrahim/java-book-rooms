@@ -4,6 +4,8 @@
  */
 package main.application.components.table.cell;
 
+import java.awt.Component;
+
 /**
  *
  * @author aldes
@@ -14,47 +16,16 @@ public class TableActionVisibility {
     protected boolean editActionVisible = true;
     protected boolean deleteActionVisible = true;
     
-    private int row;
-    private int column;
-
-    public boolean isViewActionVisible() {
-        return viewActionVisible;
+    public void toggleViewVisibility(Component com, Integer row, Integer column) {
+        com.setVisible(viewActionVisible);
     }
-
-    public void setViewActionVisible(boolean viewActionVisible) {
-        this.viewActionVisible = viewActionVisible;
+    
+    public void toggleEditVisibility(Component com, Integer row, Integer column) {
+        com.setVisible(editActionVisible);
     }
-
-    public boolean isEditActionVisible() {
-        return editActionVisible;
-    }
-
-    public void setEditActionVisible(boolean editActionVisible) {
-        this.editActionVisible = editActionVisible;
-    }
-
-    public boolean isDeleteActionVisible() {
-        return deleteActionVisible;
-    }
-
-    public void setDeleteActionVisible(boolean deleteActionVisible) {
-        this.deleteActionVisible = deleteActionVisible;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getColumn() {
-        return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
+    
+    public void toggleDeleteVisibility(Component com, Integer row, Integer column) {
+        com.setVisible(deleteActionVisible);
     }
     
 }

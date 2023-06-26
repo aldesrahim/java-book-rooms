@@ -28,6 +28,7 @@ import main.application.components.NumberInputField;
 import main.application.components.NumberInputGroup;
 import main.application.components.TextInputGroup;
 import main.application.forms.FormType;
+import main.application.enums.ReservationStatus;
 import main.model.Consumption;
 import main.model.ConsumptionReservation;
 import main.model.Reservation;
@@ -56,6 +57,8 @@ public class ReservationInputForm extends JPanel {
     private Map<Long, ConsumptionReservation> consumptionReservationMap = new HashMap<>();
 
     private boolean isReadOnly = false;
+    private boolean isToBeCheckedIn = false;
+    private boolean isToBeCheckedOut = false;
 
     public ReservationInputForm() {
         init();
@@ -84,6 +87,8 @@ public class ReservationInputForm extends JPanel {
         initHeader(panel);
         initForm(panel);
         initFormEvent();
+
+        toggleVisibilities();
 
         add(bodyPanel, BorderLayout.CENTER);
 
@@ -136,23 +141,35 @@ public class ReservationInputForm extends JPanel {
         groupAttendance.setTitleText("Jumlah Peserta");
         inputPanel.add(groupAttendance);
 
-        groupStartedAt = new DateTimeInputGroup();
-        groupStartedAt.setTitleText("Dari Tanggal (Booking)");
-        inputPanel.add(groupStartedAt);
-
-        groupEndedAt = new DateTimeInputGroup();
-        groupEndedAt.setTitleText("Sampai Tanggal (Booking)");
-        inputPanel.add(groupEndedAt);
-
         groupSubject = new TextInputGroup();
         groupSubject.setTitleText("Tema Kegiatan");
         inputPanel.add(groupSubject);
-        
+
         groupStatus = new TextInputGroup();
         groupStatus.setTitleText("Status");
-        groupStatus.getInputField().setEnabled(false);
         groupStatus.getInputField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Auto-generate oleh sistem");
-        inputPanel.add(groupStatus);
+        groupStatus.getInputField().setEnabled(false);
+        inputPanel.add(groupStatus, "wrap");
+
+        groupStartedAt = new DateTimeInputGroup();
+        groupStartedAt.setTitleText("Pesan Dari Tanggal");
+        inputPanel.add(groupStartedAt);
+
+        groupEndedAt = new DateTimeInputGroup();
+        groupEndedAt.setTitleText("Pesan Sampai Tanggal");
+        inputPanel.add(groupEndedAt);
+
+        groupCheckedInAt = new DateTimeInputGroup();
+        groupCheckedInAt.getInputField().setDate(null);
+        groupCheckedInAt.setTitleText("Tanggal Check In");
+        groupCheckedInAt.setVisible(false);
+        inputPanel.add(groupCheckedInAt);
+
+        groupCheckedOutAt = new DateTimeInputGroup();
+        groupCheckedOutAt.getInputField().setDate(null);
+        groupCheckedOutAt.setTitleText("Tanggal Check Out");
+        groupCheckedOutAt.setVisible(false);
+        inputPanel.add(groupCheckedOutAt);
 
         formPanel.add(inputPanel, "wrap");
 
@@ -161,19 +178,87 @@ public class ReservationInputForm extends JPanel {
         JPanel buttonPanel = new JPanel(new MigLayout("ins 2, hidemode 3", "[]10[]"));
         buttonPanel.setOpaque(false);
 
+        cmdCheckIn = new Button();
+        cmdCheckIn.setText("Check In");
+        cmdCheckIn.setVisible(formType.equals(FormType.VIEW));
+        buttonPanel.add(cmdCheckIn);
+
+        cmdCheckOut = new Button();
+        cmdCheckOut.setText("Check Out");
+        cmdCheckOut.setVisible(formType.equals(FormType.VIEW));
+        buttonPanel.add(cmdCheckOut);
+
+        cmdCancel = new Button();
+        cmdCancel.setText("Batalkan");
+        cmdCancel.setVisible(formType.equals(FormType.VIEW));
+        buttonPanel.add(cmdCancel);
+
         cmdSave = new Button();
         cmdSave.setText("Simpan");
         cmdSave.setVisible(!formType.equals(FormType.VIEW));
         buttonPanel.add(cmdSave);
 
-        cmdClear = new Button();
+        cmdClear = new Button(); // TO REVERT CHECK IN OR CHECK OUT
         cmdClear.setText("Bersihkan");
-        cmdClear.setVisible(formType.equals(FormType.CREATE));
+        cmdClear.setVisible(false);
         buttonPanel.add(cmdClear);
 
         formPanel.add(buttonPanel, "wrap, right");
 
         panel.add(formPanel, "wrap, growx");
+
+        // TOGGLE BY FORM TYPE
+        if (formType.equals(FormType.CREATE)) {
+            groupStatus.getInputField().setEnabled(false);
+        }
+    }
+
+    private void toggleVisibilities() {
+        if (reservation.getId() == null) {
+            return;
+        }
+
+        if (formType.equals(FormType.VIEW)) {
+            cmdCheckIn.setVisible(reservation.getStatus().equals(ReservationStatus.BOOKED));
+            cmdCheckOut.setVisible(reservation.getStatus().equals(ReservationStatus.CHECKED_IN));
+            cmdCancel.setVisible(reservation.getStatus().equals(ReservationStatus.BOOKED));
+
+            groupCheckedInAt.setVisible(reservation.getStatus().equals(ReservationStatus.CHECKED_IN));
+
+            if (reservation.getStatus().equals(ReservationStatus.CANCELED)
+                    || reservation.getStatus().equals(ReservationStatus.CHECKED_OUT)) {
+                groupCheckedInAt.setVisible(true);
+                groupCheckedOutAt.setVisible(true);
+            }
+        }
+    }
+
+    private void toBeCheckedIn(boolean status) {
+        isToBeCheckedIn = status;
+
+        groupCheckedInAt.setVisible(status);
+        groupCheckedInAt.getInputField().setEnabled(status);
+
+        cmdCheckIn.setText(status ? "Simpan" : "Check In");
+
+        cmdClear.setText(status ? "Batal Check In" : "Bersihkan");
+        cmdClear.setVisible(status);
+
+        cmdCancel.setVisible(!status);
+    }
+
+    private void toBeCheckedOut(boolean status) {
+        isToBeCheckedOut = status;
+
+        groupCheckedOutAt.setVisible(status);
+        groupCheckedOutAt.getInputField().setEnabled(status);
+
+        cmdCheckOut.setText(status ? "Simpan" : "Check Out");
+
+        cmdClear.setText(status ? "Batal Check Out" : "Bersihkan");
+        cmdClear.setVisible(status);
+
+        cmdCancel.setVisible(!status);
     }
 
     private void initRoomComboBoxItem() {
@@ -201,7 +286,34 @@ public class ReservationInputForm extends JPanel {
             save();
         });
         cmdClear.addActionListener((ae) -> {
-            clearForm();
+            // clearForm();
+
+            if (isToBeCheckedIn) {
+                toBeCheckedIn(false);
+            }
+
+            if (isToBeCheckedOut) {
+                toBeCheckedOut(false);
+            }
+
+        });
+        cmdCancel.addActionListener((ae) -> {
+            cancel();
+        });
+        cmdCheckIn.addActionListener((ae) -> {
+            if (isToBeCheckedIn) {
+                checkIn();
+            } else {
+                toBeCheckedIn(true);
+            }
+        });
+
+        cmdCheckOut.addActionListener((ae) -> {
+            if (isToBeCheckedOut) {
+                checkOut();
+            } else {
+                toBeCheckedOut(true);
+            }
         });
     }
 
@@ -296,6 +408,8 @@ public class ReservationInputForm extends JPanel {
         groupAttendance.getInputField().setEnabled(false);
         groupStartedAt.getInputField().setEnabled(false);
         groupEndedAt.getInputField().setEnabled(false);
+        groupCheckedInAt.getInputField().setEnabled(false);
+        groupCheckedOutAt.getInputField().setEnabled(false);
 
         groupId.hideError();
         groupName.hideError();
@@ -304,6 +418,8 @@ public class ReservationInputForm extends JPanel {
         groupAttendance.hideError();
         groupStartedAt.hideError();
         groupEndedAt.hideError();
+        groupCheckedInAt.hideError();
+        groupCheckedOutAt.hideError();
 
         for (int i = 0; i < consumptionItem.size(); i++) {
             JCheckBox item = consumptionItem.get(i);
@@ -314,6 +430,137 @@ public class ReservationInputForm extends JPanel {
         }
 
         cbRoom.getInputField().setEnabled(false);
+    }
+
+    private void checkIn() {
+        try {
+            reservation.setCheckedInAt(groupCheckedInAt.getDateTime());
+
+            Validation formValidation = new Validation()
+                    .addItem(new ValidationItem(groupCheckedInAt)
+                            .addRule(new RuleNotEmpty())
+                    );
+
+            if (!formValidation.validate()) {
+                throw new Exception(formValidation.getErrorMessageString());
+            }
+
+            if (reservation.getCheckedInAt().compareTo(reservation.getEndedAt()) > 0) {
+                throw new Exception("Tanggal Check In tidak valid");
+            }
+
+            reservation.setStatus(ReservationStatus.CHECKED_IN);
+            Response status = service.checkIn(reservation);
+
+            if (!status.isSuccess()) {
+                throw new Exception(status.getMessage());
+            }
+
+            Dialog dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+            dialog.setMessage("Check In Berhasil");
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+
+            goBack();
+        } catch (Exception e) {
+            Dialog dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.ERROR_MESSAGE);
+            dialog.setMessage(e.getMessage());
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+        }
+    }
+
+    private void checkOut() {
+        try {
+            reservation.setCheckedOutAt(groupCheckedOutAt.getDateTime());
+
+            Validation formValidation = new Validation()
+                    .addItem(new ValidationItem(groupCheckedOutAt)
+                            .addRule(new RuleNotEmpty())
+                    );
+
+            if (!formValidation.validate()) {
+                throw new Exception(formValidation.getErrorMessageString());
+            }
+
+            if (reservation.getCheckedInAt().compareTo(reservation.getCheckedOutAt()) > 0) {
+                throw new Exception("Tanggal Check Out tidak valid");
+            }
+
+            reservation.setStatus(ReservationStatus.CHECKED_OUT);
+            Response status = service.checkOut(reservation);
+
+            if (!status.isSuccess()) {
+                throw new Exception(status.getMessage());
+            }
+
+            Dialog dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+            dialog.setMessage("Check Out Berhasil");
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+
+            goBack();
+        } catch (Exception e) {
+            Dialog dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.ERROR_MESSAGE);
+            dialog.setMessage(e.getMessage());
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+        }
+    }
+
+    private void cancel() {
+        Long id = reservation.getId();
+
+        Dialog dialog = new Dialog("Perhatian");
+        dialog.setMessageType(JOptionPane.QUESTION_MESSAGE);
+        dialog.setMessage("Anda yakin ingin membatalkan reservasi ini ?");
+        dialog.setOptionType(JOptionPane.YES_NO_OPTION);
+        Object status = dialog.show(getRootPane());
+
+        if (!status.equals(0)) {
+            return;
+        }
+
+        try {
+            if (id == null) {
+                throw new Exception("RESERVATION_NOT_FOUND");
+            }
+
+            reservation.setStatus(ReservationStatus.CANCELED);
+            Response res = service.cancel(reservation);
+
+            if (!res.isSuccess()) {
+                throw new Exception(res.getMessage());
+            }
+
+            dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+            dialog.setMessage("Reservasi berhasil dibatalkan");
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+
+            goBack();
+        } catch (Exception e) {
+            String message = e.getMessage();
+
+            if (message.equalsIgnoreCase("RESERVATION_NOT_FOUND")) {
+                message = "Reservasi tidak ditemukan";
+            }
+
+            dialog = new Dialog("Perhatian");
+            dialog.setMessageType(JOptionPane.ERROR_MESSAGE);
+            dialog.setMessage(message);
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+
+            if (message.equalsIgnoreCase("RESERVATION_NOT_FOUND")) {
+                goBack();
+            }
+        }
     }
 
     private void save() {
@@ -360,16 +607,11 @@ public class ReservationInputForm extends JPanel {
                             .addRule(new RuleNotEmpty())
                     )
                     .addItem(new ValidationItem(groupStartedAt)
-                            .addRule(new RuleNotEmpty())
-                    )
+                            .addRule(new RuleNotEmpty()))
                     .addItem(new ValidationItem(groupEndedAt)
-                            .addRule(new RuleNotEmpty())
-                    );
-
-            if (!isInsert) {
-                formValidation.addItem(new ValidationItem(groupId)
-                        .addRule(new RuleNotEmpty()));
-            }
+                            .addRule(new RuleNotEmpty()))
+                    .addItem(new ValidationItem(groupId)
+                            .addRule(new RuleNotEmpty()), !isInsert);
 
             if (!formValidation.validate()) {
                 throw new Exception(formValidation.getErrorMessageString());
@@ -384,11 +626,15 @@ public class ReservationInputForm extends JPanel {
             reservation.setEndedAt(groupEndedAt.getDateTime());
 
             if (formType.equals(FormType.CREATE)) {
-                reservation.setStatus(Reservation.Status.BOOKED);
+                reservation.setStatus(ReservationStatus.BOOKED);
             }
 
             if (!service.isDateAvailable(roomId, startedAt, endedAt, reservation.getId())) {
                 throw new Exception("Gedung/Ruangan ini tidak tersedia untuk tanggal yang dipilih");
+            }
+
+            if (reservation.getStartedAt().compareTo(reservation.getEndedAt()) > 0) {
+                throw new Exception("Tanggal pesan tidak valid");
             }
 
             Response response = service.save(reservation, consumptionReservation);
@@ -404,7 +650,8 @@ public class ReservationInputForm extends JPanel {
             dialog.show(getRootPane());
 
             clearForm();
-            goBack();
+
+            Application.showForm(new ReservationInputForm(new Reservation().find(reservation.getId()), FormType.VIEW)); // GO VIEW
         } catch (Exception ex) {
             Dialog dialog = new Dialog("Perhatian");
             dialog.setMessageType(JOptionPane.ERROR_MESSAGE);
@@ -419,10 +666,12 @@ public class ReservationInputForm extends JPanel {
         groupName.getInputField().setText(reservation.getName());
         groupPhoneNumber.getInputField().setText(reservation.getPhoneNumber());
         groupAttendance.getInputField().setText(reservation.getAttendance().toString());
-        groupStartedAt.getInputField().setDate(reservation.getStartedAt());
-        groupEndedAt.getInputField().setDate(reservation.getEndedAt());
+        groupStartedAt.setDateTime(reservation.getStartedAt());
+        groupEndedAt.setDateTime(reservation.getEndedAt());
         groupSubject.getInputField().setText(reservation.getSubject());
         groupStatus.getInputField().setText(reservation.getStatus().toString());
+        groupCheckedInAt.setDateTime(reservation.getCheckedInAt());
+        groupCheckedOutAt.setDateTime(reservation.getCheckedOutAt());
 
         if (isReadOnly) {
             readOnly();
@@ -452,8 +701,13 @@ public class ReservationInputForm extends JPanel {
     private TextInputGroup groupId;
     private DateTimeInputGroup groupStartedAt;
     private DateTimeInputGroup groupEndedAt;
+    private DateTimeInputGroup groupCheckedInAt;
+    private DateTimeInputGroup groupCheckedOutAt;
     private TextInputGroup groupStatus;
     private Button cmdSave;
+    private Button cmdCheckIn;
+    private Button cmdCheckOut;
+    private Button cmdCancel;
     private Button cmdClear;
 
     private ComboBoxInputGroup<RoomComboBoxItem> cbRoom;

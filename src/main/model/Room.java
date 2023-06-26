@@ -8,6 +8,7 @@ import main.util.query.QueryFetch;
 import main.util.query.QueryUpdate;
 import main.util.query.clause.JoinClause;
 import main.util.query.clause.JoinOnClause;
+import main.util.query.clause.OrderByClause;
 import main.util.query.clause.SetClause;
 import main.util.query.clause.WhereClause;
 
@@ -179,13 +180,19 @@ public class Room extends Model {
         return delete(getId());
     }
     
-    @Override
-    public Room find(Object id) throws SQLException {
-        QueryFetch fetch = query()
-                .addSelect("rooms.*")
+    public void relationshipTypes() {
+        query()
                 .addSelect("types.name AS type_name")
                 .addSelect("(SELECT COUNT(1) FROM facility_room pivot WHERE pivot.room_id = rooms.id) AS facility_count")
-                .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id")))
+                .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id")));
+    }
+    
+    @Override
+    public Room find(Object id) throws SQLException {
+        relationshipTypes();
+        
+        QueryFetch fetch = query()
+                .addSelect("rooms.*")
                 .addWhere(new WhereClause(getPrimaryKey(), id))
                 .fetch();
         
@@ -212,21 +219,13 @@ public class Room extends Model {
     
     @Override
     public List all() throws SQLException {
-        List<Room> rows = new ArrayList<>();
+        relationshipTypes();
         
-        ResultSet rs = query()
+        query()
                 .addSelect("rooms.*")
-                .addSelect("types.name AS type_name")
-                .addSelect("(SELECT COUNT(*) FROM facility_room pivot WHERE pivot.room_id = rooms.id) AS facility_count")
-                .addJoin(new JoinClause((new Type()).getTable(), new JoinOnClause("types.id", "rooms.type_id"), "LEFT JOIN"))
-                .fetch()
-                .get();
+                .addOrderBy(new OrderByClause("rooms.created_at", "desc"));
         
-        while (rs.next()) {
-            rows.add(fromResultSet(rs));
-        }
-        
-        return rows;
+        return super.all();
     }
     
     @Override
