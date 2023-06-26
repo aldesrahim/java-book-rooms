@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 19/06/2023 14:19:35
+ Date: 26/06/2023 21:24:01
 */
 
 SET NAMES utf8mb4;
@@ -71,7 +71,7 @@ CREATE TABLE `consumptions` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of consumptions
@@ -79,29 +79,6 @@ CREATE TABLE `consumptions` (
 BEGIN;
 INSERT INTO `consumptions` (`id`, `name`, `created_at`, `updated_at`) VALUES (1, 'Air Mineral', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
 INSERT INTO `consumptions` (`id`, `name`, `created_at`, `updated_at`) VALUES (2, 'Snack', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
-INSERT INTO `consumptions` (`id`, `name`, `created_at`, `updated_at`) VALUES (3, 'Nasi Padang', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
-COMMIT;
-
--- ----------------------------
--- Table structure for facilites
--- ----------------------------
-DROP TABLE IF EXISTS `facilites`;
-CREATE TABLE `facilites` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
-
--- ----------------------------
--- Records of facilites
--- ----------------------------
-BEGIN;
-INSERT INTO `facilites` (`id`, `name`, `created_at`, `updated_at`) VALUES (1, 'AC', '2023-06-15 01:15:17', '2023-06-15 01:15:17');
-INSERT INTO `facilites` (`id`, `name`, `created_at`, `updated_at`) VALUES (2, 'Proyektor', '2023-06-15 01:15:17', '2023-06-15 01:15:17');
-INSERT INTO `facilites` (`id`, `name`, `created_at`, `updated_at`) VALUES (3, 'Meja', '2023-06-15 01:15:17', '2023-06-15 01:15:17');
-INSERT INTO `facilites` (`id`, `name`, `created_at`, `updated_at`) VALUES (4, 'Kursi', '2023-06-15 01:15:17', '2023-06-15 01:15:17');
 COMMIT;
 
 -- ----------------------------
@@ -114,13 +91,13 @@ CREATE TABLE `facilities` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of facilities
 -- ----------------------------
 BEGIN;
-INSERT INTO `facilities` (`id`, `name`, `created_at`, `updated_at`) VALUES (1, 'AC', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
+INSERT INTO `facilities` (`id`, `name`, `created_at`, `updated_at`) VALUES (1, 'AC', '2023-06-15 11:21:03', '2023-06-20 11:51:09');
 INSERT INTO `facilities` (`id`, `name`, `created_at`, `updated_at`) VALUES (2, 'Proyektor', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
 INSERT INTO `facilities` (`id`, `name`, `created_at`, `updated_at`) VALUES (3, 'Meja', '2023-06-15 11:21:02', '2023-06-15 11:21:02');
 INSERT INTO `facilities` (`id`, `name`, `created_at`, `updated_at`) VALUES (4, 'Kursi', '2023-06-15 11:21:02', '2023-06-15 11:30:46');
@@ -144,10 +121,6 @@ CREATE TABLE `facility_room` (
 -- Records of facility_room
 -- ----------------------------
 BEGIN;
-INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (1, 1, 4);
-INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (2, 1, 1);
-INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (3, 1, 40);
-INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (4, 1, 40);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (1, 2, 2);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (2, 2, 1);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (3, 2, 20);
@@ -156,6 +129,11 @@ INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (1, 3, 1);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (2, 3, 2);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (3, 3, 10);
 INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (4, 3, 10);
+INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (1, 1, 4);
+INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (2, 1, 1);
+INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (3, 1, 40);
+INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (1, 4, 2);
+INSERT INTO `facility_room` (`facility_id`, `room_id`, `qty`) VALUES (2, 4, 2);
 COMMIT;
 
 -- ----------------------------
@@ -205,7 +183,7 @@ CREATE TABLE `rooms` (
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `types` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of rooms
@@ -214,6 +192,7 @@ BEGIN;
 INSERT INTO `rooms` (`id`, `type_id`, `name`, `capacity`, `description`, `created_at`, `updated_at`) VALUES (1, 2, 'Ruangan A', 40, 'Dapat digunakan dalam segala kondisi', '2023-06-15 11:21:03', '2023-06-15 11:21:03');
 INSERT INTO `rooms` (`id`, `type_id`, `name`, `capacity`, `description`, `created_at`, `updated_at`) VALUES (2, 2, 'Ruangan B', 20, 'Dapat digunakan untuk skala kecil', '2023-06-15 11:21:03', '2023-06-15 11:21:03');
 INSERT INTO `rooms` (`id`, `type_id`, `name`, `capacity`, `description`, `created_at`, `updated_at`) VALUES (3, 1, 'Balai A', 100, 'Dapat digunakakn untuk resepsi pernikahan', '2023-06-15 11:21:03', '2023-06-15 11:21:03');
+INSERT INTO `rooms` (`id`, `type_id`, `name`, `capacity`, `description`, `created_at`, `updated_at`) VALUES (4, 3, 'Balai Kota', 1000, '', '2023-06-19 12:04:39', '2023-06-19 12:04:39');
 COMMIT;
 
 -- ----------------------------
@@ -227,7 +206,7 @@ CREATE TABLE `types` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COMMENT='we need 2 default room types:\n1. Gedung\n2. Ruangan\n\nso the employee is able to add more room types,\nsince "rooms" is not necassarily a room, it can\nbe a building or even an ambulance, who knows.';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COMMENT='we need 2 default room types:\n1. Gedung\n2. Ruangan\n\nso the employee is able to add more room types,\nsince "rooms" is not necassarily a room, it can\nbe a building or even an ambulance, who knows.';
 
 -- ----------------------------
 -- Records of types
@@ -235,6 +214,7 @@ CREATE TABLE `types` (
 BEGIN;
 INSERT INTO `types` (`id`, `name`, `is_default`, `created_at`, `updated_at`) VALUES (1, 'Gedung', 1, '2023-06-15 11:21:03', '2023-06-15 11:21:03');
 INSERT INTO `types` (`id`, `name`, `is_default`, `created_at`, `updated_at`) VALUES (2, 'Ruangan', 1, '2023-06-15 11:21:03', '2023-06-15 11:21:03');
+INSERT INTO `types` (`id`, `name`, `is_default`, `created_at`, `updated_at`) VALUES (3, 'Ambulance', 0, '2023-06-19 12:02:02', '2023-06-19 12:02:02');
 COMMIT;
 
 -- ----------------------------
@@ -255,7 +235,7 @@ CREATE TABLE `users` (
 -- Records of users
 -- ----------------------------
 BEGIN;
-INSERT INTO `users` (`id`, `name`, `username`, `password`, `created_at`, `updated_at`) VALUES (1, 'Admin', 'admin', '5ebe2294ecd0e0f08eab7690d2a6ee69', '2023-06-15 11:21:03', '2023-06-15 11:21:03');
+INSERT INTO `users` (`id`, `name`, `username`, `password`, `created_at`, `updated_at`) VALUES (1, 'Admin', 'admin', '5ebe2294ecd0e0f08eab7690d2a6ee69', '2023-06-15 11:21:03', '2023-06-19 08:16:53');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -355,6 +355,7 @@ public class Reservation extends Model {
                 .addWhere(new WhereClause()
                         .addSub(new WhereClause("reservations.name", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("rooms.name", "like", "%" + term + "%", "OR"))
+                        .addSub(new WhereClause("users.name", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("types.name", "=", term, "OR"))
                         .addSub(new WhereClause("phone_number", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("attendance", "like", "%" + term + "%", "OR"))
@@ -371,6 +372,7 @@ public class Reservation extends Model {
 
         query()
                 .addSet(new SetClause("room_id", getRoomId()))
+                .addSet(new SetClause("user_id", getUserId()))
                 .addSet(new SetClause("name", getName()))
                 .addSet(new SetClause("phone_number", getPhoneNumber()))
                 .addSet(new SetClause("attendance", getAttendance()))
@@ -457,6 +459,6 @@ public class Reservation extends Model {
 
     @Override
     public String toString() {
-        return "Reservation{" + "id=" + id + ", roomId=" + roomId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", attendance=" + attendance + ", subject=" + subject + ", startedAt=" + startedAt + ", endedAt=" + endedAt + ", checkedInAt=" + checkedInAt + ", checkedOutAt=" + checkedOutAt + ", status=" + status + '}';
+        return "Reservation{" + "id=" + id + ", roomId=" + roomId + ", userId=" + userId + ", name=" + name + ", phoneNumber=" + phoneNumber + ", attendance=" + attendance + ", subject=" + subject + ", startedAt=" + startedAt + ", endedAt=" + endedAt + ", checkedInAt=" + checkedInAt + ", checkedOutAt=" + checkedOutAt + ", status=" + status + ", room=" + room + ", user=" + user + '}';
     }
 }

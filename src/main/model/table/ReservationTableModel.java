@@ -22,7 +22,7 @@ public class ReservationTableModel extends TableModel {
 
     public ReservationTableModel() {
         this.model = new Reservation();
-        this.actionIndex = 8;
+        this.actionIndex = 9;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ReservationTableModel extends TableModel {
 
     @Override
     public String[] getHeaders() {
-        return new String[]{"Instansi/Penyelenggara", "No.Telp", "Status", "Gedung/Ruangan", "Dari Tgl Reservasi", "Sampai Tgl Reservasi", "Tgl Check In", "Tgl Check Out", "Aksi"};
+        return new String[]{"Instansi/Penyelenggara", "No.Telp", "Status", "Gedung/Ruangan", "Dari Tgl Reservasi", "Sampai Tgl Reservasi", "Tgl Check In", "Tgl Check Out", "Dibuat Oleh", "Aksi"};
     }
 
     @Override
@@ -75,6 +75,8 @@ public class ReservationTableModel extends TableModel {
             case 7 ->
                 (item.getCheckedOutAt() != null ? dateFormat.format(item.getCheckedOutAt()) : "");
             case 8 ->
+                item.getUser() != null ? item.getUser().getName() : "";
+            case 9 ->
                 item.getId();
             default ->
                 null;
