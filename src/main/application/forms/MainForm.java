@@ -19,14 +19,13 @@ public class MainForm extends javax.swing.JPanel {
     
     /**
      * Creates new form DefaultForm
+     * @param authUser
      */
     public MainForm(User authUser) {
         this.authUser = authUser;
         
         initComponents();
         init();
-
-        setSelectedMenu(0);
     }
 
     private void init() {
@@ -42,14 +41,16 @@ public class MainForm extends javax.swing.JPanel {
         menu.addEvent((int menuIndex) -> {
             MenuItem item = (MenuItem) Menu.menus[menuIndex];
 
+            if (item.getType().equals(MenuType.LOGOUT)) {
+                Application.logout();
+                
+                return;
+            }
+
             Object com = item.getMenu();
 
             if (com != null && com instanceof JPanel) {
                 showForm((JPanel) com);
-            }
-
-            if (item.getType().equals(MenuType.LOGOUT)) {
-                Application.logout();
             }
         });
     }

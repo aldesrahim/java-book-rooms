@@ -6,7 +6,6 @@ package main.application.components;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 
 /**

@@ -16,14 +16,9 @@ import main.util.query.clause.WhereClause;
  */
 public abstract class Model<T> {
 
-    private QueryBuilder queryBuilder;
-
     public QueryBuilder query() {
-        if (queryBuilder == null) {
-            queryBuilder = QueryBuilder.getInstance();
-        }
-
-        return queryBuilder.setFrom(getTable());
+        return QueryBuilder.getInstance()
+                .setFrom(getTable());
     }
 
     public abstract String getTable();

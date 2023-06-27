@@ -108,7 +108,7 @@ public class MasterRoomInputForm extends JPanel {
     }
 
     private void initForm(JPanel panel) {
-        formPanel = new CardPanel();
+        formPanel = new CardPanel(); // ini kotak biru
 
         JPanel inputPanel = new JPanel(new MigLayout("ins 0, wrap 4, hidemode 3", "[]10[]"));
         inputPanel.setOpaque(false);
