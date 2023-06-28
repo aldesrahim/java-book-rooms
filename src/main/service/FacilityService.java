@@ -6,10 +6,12 @@ package main.service;
 
 import main.model.Facility;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 import main.application.Application;
 import main.model.ActivityLog;
 import main.service.other.Response;
 import main.util.query.QueryBuilder;
+import main.util.query.clause.WhereClause;
 
 /**
  *
@@ -51,7 +53,7 @@ public class FacilityService extends BaseService {
             QueryBuilder.getInstance().commit();
 
             return new Response(true, "Data berhasil disimpan");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             QueryBuilder.getInstance().rollBack();
 
             ex.printStackTrace();
@@ -66,6 +68,9 @@ public class FacilityService extends BaseService {
         QueryBuilder.getInstance().beginTransaction();
 
         try {
+            if (!isDeletable(facility.getId())) {
+                return new Response(false, "Data tidak bisa dihapus karena terikat dengan Gedung/Ruangan");
+            }
 
             if (Application.isAuthenticated()) {
                 new ActivityLog(
@@ -83,7 +88,7 @@ public class FacilityService extends BaseService {
             QueryBuilder.getInstance().commit();
 
             return new Response(true, "Data berhasil dihapus");
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             QueryBuilder.getInstance().rollBack();
 
             ex.printStackTrace();
@@ -92,5 +97,22 @@ public class FacilityService extends BaseService {
         } finally {
             QueryBuilder.getInstance().endTransaction();
         }
+    }
+
+    public boolean isDeletable(Long id) throws SQLException {
+        ResultSet rs = QueryBuilder.getInstance()
+                .addSelect("COUNT(*) AS jml")
+                .setFrom("facility_room")
+                .addWhere(new WhereClause("facility_id", id))
+                .fetch()
+                .get();
+
+        if (rs.next()) {
+            Long count = rs.getLong("jml");
+
+            return count.equals(Long.valueOf("0"));
+        }
+
+        return false;
     }
 }

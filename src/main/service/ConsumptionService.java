@@ -4,12 +4,14 @@
  */
 package main.service;
 
+import java.sql.ResultSet;
 import main.model.Consumption;
 import java.sql.SQLException;
 import main.application.Application;
 import main.model.ActivityLog;
 import main.service.other.Response;
 import main.util.query.QueryBuilder;
+import main.util.query.clause.WhereClause;
 
 /**
  *
@@ -66,6 +68,9 @@ public class ConsumptionService extends BaseService {
         QueryBuilder.getInstance().beginTransaction();
         
         try {
+            if (!isDeletable(consumption.getId())) {
+                return new Response(false, "Data tidak bisa dihapus karena terikat dengan Reservasi");
+            }
 
             if (Application.isAuthenticated()) {
                 new ActivityLog(
@@ -92,5 +97,22 @@ public class ConsumptionService extends BaseService {
         } finally {
             QueryBuilder.getInstance().endTransaction();
         }
+    }
+
+    public boolean isDeletable(Long id) throws SQLException {
+        ResultSet rs = QueryBuilder.getInstance()
+                .addSelect("COUNT(*) AS jml")
+                .setFrom("consumption_reservation")
+                .addWhere(new WhereClause("consumption_id", id))
+                .fetch()
+                .get();
+
+        if (rs.next()) {
+            Long count = rs.getLong("jml");
+
+            return count.equals(Long.valueOf("0"));
+        }
+
+        return false;
     }
 }

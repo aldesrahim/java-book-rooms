@@ -2,12 +2,26 @@ package main.application.forms;
 
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Component;
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.application.Application;
 import main.menu.Menu;
 import main.menu.MenuItem;
 import main.menu.MenuType;
 import main.model.User;
+import main.util.Database;
+import main.util.Dialog;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -16,14 +30,15 @@ import main.model.User;
 public class MainForm extends javax.swing.JPanel {
 
     private final User authUser;
-    
+
     /**
      * Creates new form DefaultForm
+     *
      * @param authUser
      */
     public MainForm(User authUser) {
         this.authUser = authUser;
-        
+
         initComponents();
         init();
     }
@@ -43,11 +58,17 @@ public class MainForm extends javax.swing.JPanel {
 
             if (item.getType().equals(MenuType.LOGOUT)) {
                 Application.logout();
-                
+
                 return;
             }
 
             Object com = item.getMenu();
+
+            if (item.getType().equals(MenuType.BUTTON_REPORT)) {
+                showReport((String) com);
+
+                return;
+            }
 
             if (com != null && com instanceof JPanel) {
                 showForm((JPanel) com);
@@ -64,6 +85,48 @@ public class MainForm extends javax.swing.JPanel {
         panelBody.add(component);
         panelBody.repaint();
         panelBody.revalidate();
+    }
+
+    private void showReport(String name) {
+        try {
+            URL url = getClass().getResource("/resource/report/" + name + ".jrxml");
+
+            if (url == null) {
+                return;
+            }
+
+            File file = new File(url.getFile());
+            String sourcePath = file.getAbsolutePath();
+
+            Database db = Database.getInstance();
+            db.connect();
+
+            JasperReport jr = JasperCompileManager.compileReport(sourcePath);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put(JRParameter.REPORT_LOCALE, new Locale("id", "ID"));
+
+            JasperPrint jp = JasperFillManager.fillReport(
+                    jr,
+                    params,
+                    db.getConnection()
+            );
+            
+            if (jp.getPages().isEmpty()) {
+                Dialog dialog = new Dialog("Perhatian");
+                dialog.setMessage("Laporan kosong");
+                dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+                dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+                dialog.show(getRootPane());
+                
+                return;
+            }
+
+            JasperViewer.viewReport(jp, false);
+        } catch (Exception e) {
+            System.err.println("Tidak dapat melihat report " + name);
+            e.printStackTrace();
+        }
     }
 
     /**

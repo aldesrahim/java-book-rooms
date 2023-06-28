@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ActivityLogReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3b6d2c5-596e-4459-9b3e-0f3001f089d2">
+	<property name="ireport.zoom" value="1.331000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+                activity_logs.*,
+                users.`name` AS user_name 
+        FROM
+                `activity_logs`
+                JOIN users ON users.id = activity_logs.user_id 
+        ORDER BY
+                activity_logs.created_at DESC]]>
+	</queryString>
+	<field name="description" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="created_at" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="23" uuid="325e913e-fcd9-4cbd-b1d3-063a7215e751"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lap. Log Aktivitas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="526" height="20" uuid="c4293a64-9ca9-4cb3-b4de-1399a9862317"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[SMI Gedung dan Ruangan]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="526" y="23" width="276" height="20" uuid="c3dcd2c3-85dd-4808-8d47-bacead41747e"/>
+				<textElement textAlignment="Right">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="802" height="15" backcolor="#70A9A9" uuid="a6fac4af-c96a-451b-b6ab-a4c19b2bd3be"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="3" width="503" height="15" uuid="b6f0ba77-b506-41e7-a7f6-71d23f4febba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aktivitas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="3" width="162" height="15" uuid="6b47a847-e6f9-4235-a48f-79eb513d7413"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[User]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="665" y="3" width="137" height="15" uuid="c71f1f71-4cf5-4134-976b-5db78dbe4dd7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="14" backcolor="#E5ECF9" uuid="4fa4cd86-21b5-4a3d-945a-bbe886b91f60"/>
+				<box>
+					<bottomPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="162" y="1" width="503" height="15" uuid="44647917-2295-4330-aca7-e5646b7f6556"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="162" height="15" uuid="2089b987-bf22-4fc7-a895-0fa2df00963c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="665" y="0" width="137" height="15" uuid="64a19c83-ebed-42e7-b397-0eb4ab3583db"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{created_at}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

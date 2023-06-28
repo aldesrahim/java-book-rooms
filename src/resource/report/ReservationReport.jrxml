@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReservationReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3b6d2c5-596e-4459-9b3e-0f3001f089d2">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="261"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	reservations.`name`,
+	reservations.phone_number,
+	CASE reservations.`status`
+			WHEN 0 THEN 'Dipesan' 
+			WHEN 1 THEN 'Check In' 
+			WHEN 2 THEN 'Check Out'
+			ELSE 'Dibatalkan' 
+	END AS `status`,
+	rooms.`name` AS room_name,
+	CASE reservations.`status` 
+		WHEN 0 THEN reservations.started_at
+		WHEN 1 THEN reservations.checked_in_at
+		WHEN 2 THEN reservations.checked_out_at
+		ELSE reservations.updated_at 
+	END AS `start_date`,
+	CASE reservations.`status` 
+		WHEN 0 THEN reservations.ended_at
+		ELSE null
+	END AS `end_date`,
+	users.NAME AS user_name,
+	reservations.`status` AS status_code
+FROM
+	reservations
+	JOIN rooms ON rooms.id = reservations.room_id
+	JOIN types ON types.id = rooms.type_id
+	LEFT JOIN users ON users.id = reservations.user_id 
+ORDER BY
+	reservations.created_at DESC]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone_number" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String"/>
+	<field name="room_name" class="java.lang.String"/>
+	<field name="start_date" class="java.sql.Timestamp"/>
+	<field name="end_date" class="java.sql.Timestamp"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="status_code" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="23" uuid="325e913e-fcd9-4cbd-b1d3-063a7215e751"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lap. Reservasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="526" height="20" uuid="c4293a64-9ca9-4cb3-b4de-1399a9862317"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[SMI Gedung dan Ruangan]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="526" y="23" width="276" height="20" uuid="c3dcd2c3-85dd-4808-8d47-bacead41747e"/>
+				<textElement textAlignment="Right">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="802" height="15" backcolor="#70A9A9" uuid="a6fac4af-c96a-451b-b6ab-a4c19b2bd3be"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="3" width="121" height="15" uuid="b6f0ba77-b506-41e7-a7f6-71d23f4febba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="3" width="162" height="15" uuid="6b47a847-e6f9-4235-a48f-79eb513d7413"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Instansi/Penyelenggara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="3" width="121" height="15" uuid="4ac16c99-fba6-4050-8376-e8501e083631"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gedung/Ruangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="3" width="277" height="15" uuid="c71f1f71-4cf5-4134-976b-5db78dbe4dd7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="681" y="3" width="121" height="15" uuid="a7b567cd-e7cb-436a-938e-c206c39a3496"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dibuat oleh]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="14" backcolor="#E5ECF9" uuid="4fa4cd86-21b5-4a3d-945a-bbe886b91f60"/>
+				<box>
+					<bottomPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="162" y="1" width="121" height="15" uuid="44647917-2295-4330-aca7-e5646b7f6556"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="162" height="15" uuid="2089b987-bf22-4fc7-a895-0fa2df00963c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="681" y="1" width="121" height="15" uuid="6cf0b05b-f8bf-4d7c-96de-add0a7aa91e2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="1" width="121" height="15" uuid="acca8dd1-6e2e-4a6c-a07c-341217adf488"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{room_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="1" width="140" height="15" uuid="3790a193-aa6b-4d72-b580-96e1015806a9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="544" y="1" width="137" height="15" uuid="64a19c83-ebed-42e7-b397-0eb4ab3583db"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

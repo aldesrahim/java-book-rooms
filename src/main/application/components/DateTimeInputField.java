@@ -18,7 +18,7 @@ import org.jdesktop.swingx.JXDatePicker;
 public class DateTimeInputField extends JXDatePicker {
 
     private DateFormat dateFormat = new SimpleDateFormat("EEEEE, dd MMMMM yyyy HH:mm", new Locale("id", "ID"));
-
+    
     public DateTimeInputField() {
         super(new Date());
 

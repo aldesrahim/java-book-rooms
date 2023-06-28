@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RoomReport" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3b6d2c5-596e-4459-9b3e-0f3001f089d2">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+                rooms.*,
+                types.`name` AS type_name 
+        FROM
+                `rooms`
+                JOIN types ON types.id = rooms.type_id 
+        ORDER BY
+                rooms.created_at DESC]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="description" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="capacity" class="java.lang.Integer"/>
+	<field name="type_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="23" uuid="325e913e-fcd9-4cbd-b1d3-063a7215e751"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lap. Gedung dan Ruangan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="23" width="526" height="20" uuid="c4293a64-9ca9-4cb3-b4de-1399a9862317"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[SMI Gedung dan Ruangan]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="526" y="23" width="276" height="20" uuid="c3dcd2c3-85dd-4808-8d47-bacead41747e"/>
+				<textElement textAlignment="Right">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="23">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="802" height="15" backcolor="#70A9A9" uuid="a6fac4af-c96a-451b-b6ab-a4c19b2bd3be"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="3" width="66" height="15" uuid="b6f0ba77-b506-41e7-a7f6-71d23f4febba"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kapasitas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="3" width="162" height="15" uuid="6b47a847-e6f9-4235-a48f-79eb513d7413"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="228" y="3" width="121" height="15" uuid="4ac16c99-fba6-4050-8376-e8501e083631"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="349" y="3" width="453" height="15" uuid="c71f1f71-4cf5-4134-976b-5db78dbe4dd7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Deskripsi]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="14" backcolor="#E5ECF9" uuid="4fa4cd86-21b5-4a3d-945a-bbe886b91f60"/>
+				<box>
+					<bottomPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<text><![CDATA[ ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="162" y="1" width="66" height="15" uuid="44647917-2295-4330-aca7-e5646b7f6556"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="162" height="15" uuid="2089b987-bf22-4fc7-a895-0fa2df00963c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="228" y="1" width="121" height="15" uuid="acca8dd1-6e2e-4a6c-a07c-341217adf488"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{type_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="1" width="453" height="15" uuid="3790a193-aa6b-4d72-b580-96e1015806a9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
