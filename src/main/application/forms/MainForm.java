@@ -89,13 +89,7 @@ public class MainForm extends javax.swing.JPanel {
 
     private void showReport(String name) {
         try {
-            URL url = getClass().getResource("/resource/report/" + name + ".jrxml");
-
-            if (url == null) {
-                return;
-            }
-
-            File file = new File(url.getFile());
+            File file = new File("src/resource/report/" + name + ".jrxml");
             String sourcePath = file.getAbsolutePath();
 
             Database db = Database.getInstance();
