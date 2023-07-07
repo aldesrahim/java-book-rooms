@@ -168,6 +168,17 @@ public class ConsumptionReportForm extends JPanel {
                 ? ((RoomComboBoxItem) cbRoom.getSelectedItem()).getModel().getId()
                 : null;
 
+        if ((date1 != null && date2 == null) || (date2 != null && date1 == null)) {
+            Dialog dialog = new Dialog("Perhatian");
+            dialog.setMessage("Salah satu tanggal tidak boleh kosong");
+            dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+            dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+            dialog.show(getRootPane());
+
+            return;
+
+        }
+
         QueryBuilder builder = QueryBuilder.getInstance();
 
         try {

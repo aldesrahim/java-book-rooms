@@ -16,6 +16,7 @@ import main.menu.MenuType;
 import main.model.User;
 import main.util.Database;
 import main.util.Dialog;
+import main.util.Report;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -65,7 +66,15 @@ public class MainForm extends javax.swing.JPanel {
             Object com = item.getMenu();
 
             if (item.getType().equals(MenuType.BUTTON_REPORT) && com instanceof String) {
-                showReport((String) com);
+                try {
+                    Report.showReport((String) com);
+                } catch (Throwable e) {
+                    Dialog dialog = new Dialog("Perhatian");
+                    dialog.setMessage(e.getMessage());
+                    dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+                    dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
+                    dialog.show(getRootPane());
+                }
 
                 return;
             }
@@ -85,42 +94,6 @@ public class MainForm extends javax.swing.JPanel {
         panelBody.add(component);
         panelBody.repaint();
         panelBody.revalidate();
-    }
-
-    private void showReport(String name) {
-        try {
-            File file = new File("src/resource/report/" + name + ".jrxml");
-            String sourcePath = file.getAbsolutePath();
-
-            Database db = Database.getInstance();
-            db.connect();
-
-            JasperReport jr = JasperCompileManager.compileReport(sourcePath);
-
-            Map<String, Object> params = new HashMap<>();
-            params.put(JRParameter.REPORT_LOCALE, new Locale("id", "ID"));
-
-            JasperPrint jp = JasperFillManager.fillReport(
-                    jr,
-                    params,
-                    db.getConnection()
-            );
-            
-            if (jp.getPages().isEmpty()) {
-                Dialog dialog = new Dialog("Perhatian");
-                dialog.setMessage("Laporan kosong");
-                dialog.setMessageType(JOptionPane.INFORMATION_MESSAGE);
-                dialog.setOptionType(JOptionPane.DEFAULT_OPTION);
-                dialog.show(getRootPane());
-                
-                return;
-            }
-
-            JasperViewer.viewReport(jp, false);
-        } catch (Exception e) {
-            System.err.println("Tidak dapat melihat report " + name);
-            e.printStackTrace();
-        }
     }
 
     /**
