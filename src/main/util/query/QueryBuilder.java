@@ -43,7 +43,7 @@ public class QueryBuilder {
 
     protected Connection dbConnection;
     protected PreparedStatement preparedStatement;
-
+    
     protected boolean debug = false;
 
     protected static QueryBuilder instance;
@@ -619,6 +619,16 @@ public class QueryBuilder {
 
     public PreparedStatement getPreparedStatement() {
         return preparedStatement;
+    }
+    
+    public String toSql(QueryMethod method) throws SQLException {
+        this.build(method);
+        
+        String sql = preparedStatement.toString();
+        
+        reset();
+        
+        return sql.substring( sql.indexOf( ": " ) + 2 );
     }
 
     protected void mapParam(int index, Object arg) throws SQLException {

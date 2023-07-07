@@ -10,6 +10,7 @@ import main.application.forms.masterroom.MasterRoomForm;
 import main.application.forms.mastertype.MasterTypeForm;
 import main.application.forms.masteruser.MasterUserForm;
 import main.application.forms.other.DashboardForm;
+import main.application.forms.report.ActivityLogReportForm;
 import main.application.forms.reservation.ReservationForm;
 
 /**
@@ -38,8 +39,8 @@ public enum MenuName {
             case REPORT_RESERVATION -> "ReservationReport";
             case REPORT_ROOM -> "RoomReport";
             case REPORT_CONSUMPTION -> "ConsumptionReport";
-            case REPORT_ACTIVITY_LOG -> "ActivityLogReport";
-
+            //case REPORT_ACTIVITY_LOG -> "ActivityLogReport";
+            case REPORT_ACTIVITY_LOG -> new ActivityLogReportForm();
             default ->
                 null;
         };

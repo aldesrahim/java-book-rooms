@@ -4,8 +4,6 @@
  */
 package main.application.forms.other;
 
-import main.application.forms.*;
-
 /**
  *
  * @author aldes

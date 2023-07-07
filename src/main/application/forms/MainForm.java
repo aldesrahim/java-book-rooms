@@ -64,7 +64,7 @@ public class MainForm extends javax.swing.JPanel {
 
             Object com = item.getMenu();
 
-            if (item.getType().equals(MenuType.BUTTON_REPORT)) {
+            if (item.getType().equals(MenuType.BUTTON_REPORT) && com instanceof String) {
                 showReport((String) com);
 
                 return;
