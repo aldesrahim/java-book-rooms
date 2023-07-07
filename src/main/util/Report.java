@@ -33,8 +33,6 @@ public class Report {
             Database db = Database.getInstance();
             db.connect();
             
-            System.out.println(queryString);
-            
             JasperDesign jd = JRXmlLoader.load(sourcePath);
             
             if (queryString != null && !queryString.isEmpty()) {
