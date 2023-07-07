@@ -2,17 +2,15 @@ package main.application.forms.report;
 
 import java.awt.BorderLayout;
 import java.util.List;
-import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.application.components.BodyPanel;
 import main.application.components.Button;
 import main.application.components.CardPanel;
 import main.application.components.ComboBoxInputGroup;
-import main.application.components.DateInputGroup;
 import main.application.components.Header;
-import main.model.User;
-import main.model.combobox.UserComboBoxItem;
+import main.model.Type;
+import main.model.combobox.TypeComboBoxItem;
 import main.util.Dialog;
 import main.util.Report;
 import main.util.query.QueryBuilder;
@@ -42,7 +40,7 @@ public class RoomReportForm extends JPanel {
         JPanel panel = bodyPanel.getPanel();
         
         Header header = new Header();
-        header.setTitleText("Laporan Log Aktivitas");
+        header.setTitleText("Laporan Gedung dan Ruangan");
         panel.add(header, "wrap");
         
         CardPanel formPanel = new CardPanel();
@@ -50,18 +48,10 @@ public class RoomReportForm extends JPanel {
         JPanel inputPanel = new JPanel(new MigLayout("ins 0", "[]10[]"));
         inputPanel.setOpaque(false);
         
-        cbUser = new ComboBoxInputGroup<>();
-        cbUser.setTitleText("Filter User");
+        cbType = new ComboBoxInputGroup<>();
+        cbType.setTitleText("Filter Tipe");
         initCbUsers();
-        inputPanel.add(cbUser);
-        
-        groupDate1 = new DateInputGroup();
-        groupDate1.setTitleText("Filter Dari Tanggal");
-        inputPanel.add(groupDate1);
-        
-        groupDate2 = new DateInputGroup();
-        groupDate2.setTitleText("Filter Sampai Tanggal");
-        inputPanel.add(groupDate2, "wrap");
+        inputPanel.add(cbType);
         
         JPanel buttonPanel = new JPanel(new MigLayout("ins 2", "[]10[]"));
         buttonPanel.setOpaque(false);
@@ -81,14 +71,14 @@ public class RoomReportForm extends JPanel {
     
     private void initCbUsers() {
         try {
-            List<User> users = new User().all();
+            List<Type> types = new Type().all();
             
-            cbUser.getInputField().addItem(null);
+            cbType.getInputField().addItem(null);
             
-            for (User user : users) {
-                UserComboBoxItem item = new UserComboBoxItem(user);
+            for (Type type : types) {
+                TypeComboBoxItem item = new TypeComboBoxItem(type);
                 
-                cbUser.getInputField().addItem(item);
+                cbType.getInputField().addItem(item);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -106,32 +96,26 @@ public class RoomReportForm extends JPanel {
     }
     
     private void clearForm() {
-        groupDate1.setDate(null);
-        groupDate2.setDate(null);
-        cbUser.getInputField().setSelectedItem(null);
+        cbType.getInputField().setSelectedItem(null);
     }
     
     private void search() {
-        Date date1 = groupDate1.getDate();
-        Date date2 = groupDate2.getDate();
-        Long userId = cbUser.getSelectedItem() != null
-                ? ((UserComboBoxItem) cbUser.getSelectedItem()).getModel().getId()
+        Long typeId = cbType.getSelectedItem() != null
+                ? ((TypeComboBoxItem) cbType.getSelectedItem()).getModel().getId()
                 : null;
         
         QueryBuilder builder = QueryBuilder.getInstance();
         
         try {
-            String sql = builder.setFrom("activity_logs")
-                    .addSelect("activity_logs.*")
-                    .addSelect("users.`name` AS user_name")
-                    .addJoin(new JoinClause("users", "users.id", "activity_logs.user_id"))
-                    .addOrderBy(new OrderByClause("activity_logs.created_at", "DESC"))
-                    .addWhere(new WhereClause("DATE(activity_logs.created_at)", ">=", date1), date1 != null)
-                    .addWhere(new WhereClause("DATE(activity_logs.created_at)", "<=", date2), date2 != null)
-                    .addWhere(new WhereClause("user_id", userId), userId != null)
+            String sql = builder.setFrom("rooms")
+                    .addSelect("rooms.*")
+                    .addSelect("types.`name` AS type_name")
+                    .addJoin(new JoinClause("types", "types.id", "rooms.type_id"))
+                    .addOrderBy(new OrderByClause("rooms.created_at", "DESC"))
+                    .addWhere(new WhereClause("type_id", typeId), typeId != null)
                     .toSql(QueryMethod.SELECT);
             
-            Report.showReport("ActivityLogReport", sql);
+            Report.showReport("RoomReport", sql);
         } catch (Throwable e) {
             Dialog dialog = new Dialog("Perhatian");
             dialog.setMessage(e.getMessage());
@@ -143,9 +127,7 @@ public class RoomReportForm extends JPanel {
     }
     
     private BodyPanel bodyPanel;
-    private ComboBoxInputGroup<UserComboBoxItem> cbUser;
-    private DateInputGroup groupDate1;
-    private DateInputGroup groupDate2;
+    private ComboBoxInputGroup<TypeComboBoxItem> cbType;
     private Button cmdSearch;
     private Button cmdReset;
 }
