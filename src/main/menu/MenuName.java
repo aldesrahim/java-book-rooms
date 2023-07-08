@@ -39,10 +39,14 @@ public enum MenuName {
                 new MasterUserForm();
             case RESERVATION ->
                 new ReservationForm();
-            case REPORT_RESERVATION -> new ReservationReportForm();
-            case REPORT_ROOM -> new RoomReportForm();
-            case REPORT_CONSUMPTION -> new ConsumptionReportForm();
-            case REPORT_ACTIVITY_LOG -> new ActivityLogReportForm();
+            case REPORT_RESERVATION ->
+                new ReservationReportForm();
+            case REPORT_ROOM ->
+                new RoomReportForm();
+            case REPORT_CONSUMPTION ->
+                new ConsumptionReportForm();
+            case REPORT_ACTIVITY_LOG ->
+                new ActivityLogReportForm();
             default ->
                 null;
         };

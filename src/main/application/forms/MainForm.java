@@ -2,11 +2,6 @@ package main.application.forms;
 
 import com.formdev.flatlaf.util.UIScale;
 import java.awt.Component;
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.application.Application;
@@ -14,15 +9,8 @@ import main.menu.Menu;
 import main.menu.MenuItem;
 import main.menu.MenuType;
 import main.model.User;
-import main.util.Database;
 import main.util.Dialog;
 import main.util.Report;
-import net.sf.jasperreports.engine.JRParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *

@@ -79,9 +79,9 @@ public class Menu extends javax.swing.JPanel {
 
         MenuItem item = (MenuItem) menus[menuIndex];
 
-        if (item.getType().equals(MenuType.BUTTON)) {
-            setSelected(menuIndex);
-        }
+//        if (item.getType().equals(MenuType.BUTTON)) {
+        setSelected(menuIndex);
+//        }
     }
 
     public void addEvent(MenuEvent event) {
