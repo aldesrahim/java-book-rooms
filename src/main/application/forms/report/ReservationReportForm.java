@@ -226,8 +226,8 @@ public class ReservationReportForm extends JPanel {
                             )
                             .addSub(new WhereClause("OR")
                                     .addSub(new WhereClause("status", "=", ReservationStatus.CHECKED_OUT.toInt()))
-                                    .addSub(new WhereClause("DATE(checked_in_at)", ">=", date1))
-                                    .addSub(new WhereClause("DATE(checked_out_at)", "<=", date2))
+                                    .addSub(new WhereClause("DATE(checked_out_at)", ">=", date1))
+                                    .addSub(new WhereClause("DATE(checked_in_at)", "<=", date2))
                             ),
                              date1 != null && date2 != null)
                     .addWhere(new WhereClause()

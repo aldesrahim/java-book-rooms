@@ -356,13 +356,13 @@ public class Reservation extends Model {
                         .addSub(new WhereClause("reservations.name", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("rooms.name", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("users.name", "like", "%" + term + "%", "OR"))
-                        .addSub(new WhereClause("types.name", "=", term, "OR"))
+                        .addSub(new WhereClause("types.name", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("phone_number", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("attendance", "like", "%" + term + "%", "OR"))
                         .addSub(new WhereClause("subject", "like", "%" + term + "%", "OR"))
-                        .addSub(new WhereClause("status", searchReservationStatus), searchReservationStatus != null)
+                        .addSub(new WhereClause("status", "=", searchReservationStatus, "OR"), searchReservationStatus != null)
                 );
-
+        
         return this;
     }
 
