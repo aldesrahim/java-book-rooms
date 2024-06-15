@@ -29,7 +29,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author PT BUKUKU
+ * @author aldes
  */
 public class ConsumptionReportForm extends JPanel {
 

@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -17,7 +16,7 @@ import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
- * @author PT BUKUKU
+ * @author aldes
  */
 public class Report {
 
@@ -45,6 +44,9 @@ public class Report {
             
             Map<String, Object> params = new HashMap<>();
             params.put(JRParameter.REPORT_LOCALE, new Locale("id", "ID"));
+            params.put("REPORT_SUBTITLE", "SMI Gedung dan Ruangan - SDIT ARAFAH");
+            params.put("KEPALA_SEKOLAH_NAME", "Yulianti, S.Pd");
+            params.put("KEPALA_SEKOLAH_NIP", "NIP: 1230000033");
             
             JasperPrint jp = JasperFillManager.fillReport(
                     jr,
@@ -61,5 +63,4 @@ public class Report {
             throw e;
         }
     }
-    
 }

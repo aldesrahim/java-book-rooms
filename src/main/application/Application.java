@@ -84,7 +84,7 @@ public class Application extends javax.swing.JFrame {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SMI Gedung dan Ruangan");
+        setTitle("SMI Gedung dan Ruangan - SDIT ARAFAH");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
