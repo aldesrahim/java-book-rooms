@@ -284,7 +284,7 @@ public class MasterRoomInputForm extends JPanel {
         groupName.getInputField().setText("");
         groupCapacity.getInputField().setText("");
         groupDescription.getInputField().setText("");
-        groupImageChooser.cancelSelected();
+        groupImageChooser.cancelSelected(true);
 
         groupId.hideError();
         groupName.hideError();
@@ -305,6 +305,7 @@ public class MasterRoomInputForm extends JPanel {
         groupName.getInputField().setEnabled(false);
         groupCapacity.getInputField().setEnabled(false);
         groupDescription.getInputField().setEnabled(false);
+        groupImageChooser.setIsReadOnly(true);
 
         groupId.hideError();
         groupName.hideError();

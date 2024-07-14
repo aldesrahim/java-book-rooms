@@ -224,6 +224,7 @@ public class MasterFacilityForm extends JPanel {
         Facility data = new Facility();
         data.setName(name);
         data.setImageFile(imageFile);
+        data.setImagePath(groupImageChooser.getCurrentPath());
 
         if (!id.isEmpty()) {
             data.setId(Long.valueOf(id));

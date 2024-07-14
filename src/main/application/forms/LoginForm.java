@@ -140,7 +140,7 @@ public class LoginForm extends javax.swing.JPanel {
         logoPanel.add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
         lbInstanceName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbInstanceName.setText("SDIT ARAFAF");
+        lbInstanceName.setText("SDIT ARAFAH");
         logoPanel.add(lbInstanceName, java.awt.BorderLayout.CENTER);
 
         login.setPreferredSize(new java.awt.Dimension(400, 450));

@@ -49,6 +49,7 @@ public class ImageChooserGroup extends JPanel {
     private File selectedFile;
 
     private ButtonEvent btnDeleteEvent;
+    private boolean isReadOnly = false;
 
     public ImageChooserGroup() {
         initComponents();
@@ -102,12 +103,22 @@ public class ImageChooserGroup extends JPanel {
         add(mainPanel, BorderLayout.CENTER);
     }
 
+    public void setIsReadOnly(boolean isReadOnly) {
+        btnChoose.setEnabled(!isReadOnly);
+        btnDelete.setEnabled(!isReadOnly);
+        btnCancel.setEnabled(!isReadOnly);
+    }
+
     public void setTitleText(String titleText) {
         lbTitle.setText(titleText);
     }
 
     public void setBtnDeleteEvent(ButtonEvent btnDeleteEvent) {
         this.btnDeleteEvent = btnDeleteEvent;
+    }
+
+    public String getCurrentPath() {
+        return currentPath;
     }
 
     public void setCurrentPath(String path) {

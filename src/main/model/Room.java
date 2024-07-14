@@ -209,12 +209,18 @@ public class Room extends Model {
             if (getImageFile() != null) {
                 new HandleImageUpload(this, getImageFile(), (String uploadedPath) -> {
                     try {
+                        String oldImagePath = getImagePath();
+                        
                         query()
                                 .addSet(new SetClause("image_path", uploadedPath))
                                 .addWhere(new WhereClause(getPrimaryKey(), getId()))
                                 .update();
                         
                         setImagePath(uploadedPath, true);
+                        
+                        if (oldImagePath != null) {
+                            new File(oldImagePath).delete();
+                        }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
