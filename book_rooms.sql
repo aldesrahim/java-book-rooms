@@ -88,6 +88,7 @@ DROP TABLE IF EXISTS `facilities`;
 CREATE TABLE `facilities` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
+  `image_path` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -178,6 +179,7 @@ CREATE TABLE `rooms` (
   `name` varchar(255) DEFAULT NULL,
   `capacity` int DEFAULT NULL,
   `description` text,
+  `image_path` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

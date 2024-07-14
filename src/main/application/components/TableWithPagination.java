@@ -78,7 +78,13 @@ public class TableWithPagination extends JPanel {
 
         table.setModel(tableModel);
 
-        labelInfo.setText(String.format("Menampilkan %s hingga %s dari %s entri", offset, (perPage > totalData ? totalData : perPage) * currentPage, totalData));
+        String info = String.format(
+                "Menampilkan %s hingga %s dari %s entri",
+                (totalData.equals(0) ? 0 : offset),
+                (perPage > totalData ? totalData : perPage) * currentPage,
+                totalData
+        );
+        labelInfo.setText(info);
 
         initAction();
 

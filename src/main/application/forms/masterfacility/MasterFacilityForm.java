@@ -5,10 +5,15 @@
 package main.application.forms.masterfacility;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import main.application.components.Button;
+import main.application.components.ButtonEvent;
 import main.application.components.CardPanel;
+import main.application.components.ImageChooserGroup;
 import main.application.components.TableWithPagination;
 import main.application.components.TextInputGroup;
 import main.application.components.table.cell.TableActionEvent;
@@ -32,6 +37,9 @@ public class MasterFacilityForm extends JPanel {
     private FacilityService service = new FacilityService();
     private FacilityTableModel model;
     private int atTableRowIndex;
+    
+    private Component currentComponent;
+    private Facility currentFacility;
 
     /**
      * Creates new form DefaultForm
@@ -48,6 +56,8 @@ public class MasterFacilityForm extends JPanel {
 
         header.setTitleText("Master Fasilitas");
         panel.add(header, "growx, wrap");
+        
+        currentComponent = this;
 
         initForm(panel);
         initTable(panel);
@@ -92,7 +102,31 @@ public class MasterFacilityForm extends JPanel {
 
         groupName = new TextInputGroup();
         groupName.setTitleText("Nama");
-        inputPanel.add(groupName);
+        inputPanel.add(groupName, "wrap");
+        
+        groupImageChooser = new ImageChooserGroup();
+        groupImageChooser.setTitleText("Gambar fasilitas");
+        groupImageChooser.setBtnDeleteEvent(new ButtonEvent() {
+            @Override
+            public void onClick(ActionEvent ae) {
+                Dialog confirm = new Dialog();
+                confirm.setMessageType(JOptionPane.QUESTION_MESSAGE);
+                confirm.setOptionType(JOptionPane.YES_NO_CANCEL_OPTION);
+                confirm.setMessage("Apakah Anda yakin ingin menghapus gambar ini?");
+                
+                if (!confirm.show(currentComponent).equals(JOptionPane.YES_OPTION)) {
+                    return;
+                }
+                
+                currentFacility.deleteUploadedImage();
+                groupImageChooser.cancelSelected(true);
+                
+                Dialog info = new Dialog();
+                info.setMessage("Gambar berhasil dihapus");
+                info.show(currentComponent);
+            }
+        });
+        inputPanel.add(groupImageChooser, "growx, span 4, wrap");
 
         formPanel.add(inputPanel, "wrap");
 
@@ -132,20 +166,26 @@ public class MasterFacilityForm extends JPanel {
         }
 
         groupName.getInputField().setText(facility.getName());
+        groupImageChooser.setCurrentPath(facility.getImagePath());
     }
 
     private void clearForm() {
         groupId.getInputField().setText("");
         groupName.getInputField().setText("");
-
+        groupImageChooser.cancelSelected(true);
+        
         groupId.hideError();
         groupName.hideError();
+        
+        currentFacility = null;
     }
 
     private void edit(int row) {
         Facility data = (Facility) model.find(row);
         populateForm(data);
         atTableRowIndex = row;
+        
+        currentFacility = data;
     }
 
     private void delete(int row) {
@@ -179,9 +219,11 @@ public class MasterFacilityForm extends JPanel {
         boolean isInsert = true;
         String id = groupId.getInputValue();
         String name = groupName.getInputValue();
+        File imageFile = groupImageChooser.getSelectedFile();
 
         Facility data = new Facility();
         data.setName(name);
+        data.setImageFile(imageFile);
 
         if (!id.isEmpty()) {
             data.setId(Long.valueOf(id));
@@ -253,6 +295,7 @@ public class MasterFacilityForm extends JPanel {
     private TextInputGroup groupId;
     private Button cmdSave;
     private Button cmdClear;
+    private ImageChooserGroup groupImageChooser;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private main.application.components.BodyPanel bodyPanel;

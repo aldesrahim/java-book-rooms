@@ -32,3 +32,6 @@ dist/
 nbdist/
 .nb-gradle/
 .idea/
+
+uploaded/*
+!uploaded/.gitkeep

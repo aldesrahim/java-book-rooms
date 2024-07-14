@@ -60,6 +60,13 @@ public class LoginForm extends javax.swing.JPanel {
         jPanel2.setPreferredSize(new java.awt.Dimension(UIScale.scale(250), UIScale.scale(100)));
         jPanel3.setPreferredSize(new java.awt.Dimension(UIScale.scale(250), UIScale.scale(150)));
         
+        lbInstanceName.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:$h2.font;"
+                + "border:10,0,10,0");
+        
+        add(logoPanel, "wrap");
+        add(login);
+        
         initInputEvent();
     }
     
@@ -112,6 +119,9 @@ public class LoginForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        logoPanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        lbInstanceName = new javax.swing.JLabel();
         login = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         lbTitle = new javax.swing.JLabel();
@@ -122,11 +132,16 @@ public class LoginForm extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         cmdLogin = new javax.swing.JButton();
 
-        net.miginfocom.swing.MigLayout migLayout1 = new net.miginfocom.swing.MigLayout();
-        migLayout1.setColumnConstraints("[center]");
-        migLayout1.setRowConstraints("[center]");
-        migLayout1.setLayoutConstraints("fill");
-        setLayout(migLayout1);
+        logoPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(30, 1, 1, 1));
+        logoPanel.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resource/image/logo-sdit-arafah-90.png"))); // NOI18N
+        logoPanel.add(jLabel1, java.awt.BorderLayout.PAGE_START);
+
+        lbInstanceName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbInstanceName.setText("SDIT ARAFAF");
+        logoPanel.add(lbInstanceName, java.awt.BorderLayout.CENTER);
 
         login.setPreferredSize(new java.awt.Dimension(400, 450));
         net.miginfocom.swing.MigLayout migLayout2 = new net.miginfocom.swing.MigLayout();
@@ -176,7 +191,11 @@ public class LoginForm extends javax.swing.JPanel {
 
         login.add(jPanel1);
 
-        add(login);
+        net.miginfocom.swing.MigLayout migLayout1 = new net.miginfocom.swing.MigLayout();
+        migLayout1.setColumnConstraints("[center]");
+        migLayout1.setRowConstraints("[center][center]");
+        migLayout1.setLayoutConstraints("fillx");
+        setLayout(migLayout1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
@@ -188,11 +207,14 @@ public class LoginForm extends javax.swing.JPanel {
     private javax.swing.JButton cmdLogin;
     private main.application.components.PasswordInputGroup groupPassword;
     private main.application.components.TextInputGroup groupUsername;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lbInstanceName;
     private javax.swing.JLabel lbSubTitle;
     private javax.swing.JLabel lbTitle;
     private javax.swing.JPanel login;
+    private javax.swing.JPanel logoPanel;
     // End of variables declaration//GEN-END:variables
 }

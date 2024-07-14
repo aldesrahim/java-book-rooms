@@ -6,8 +6,10 @@ package main.application.forms.masterroom;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,9 +22,11 @@ import javax.swing.JPanel;
 import main.application.Application;
 import main.application.components.BodyPanel;
 import main.application.components.Button;
+import main.application.components.ButtonEvent;
 import main.application.components.CardPanel;
 import main.application.components.ComboBoxInputGroup;
 import main.application.components.HeaderWithButton;
+import main.application.components.ImageChooserGroup;
 import main.application.components.NumberInputField;
 import main.application.components.NumberInputGroup;
 import main.application.components.TextInputGroup;
@@ -56,6 +60,7 @@ public class MasterRoomInputForm extends JPanel {
     private Map<Long, FacilityRoom> facilityRoomMap = new HashMap<>();
 
     private boolean isReadOnly = false;
+    private Component component;
 
     public MasterRoomInputForm() {
         init();
@@ -86,6 +91,8 @@ public class MasterRoomInputForm extends JPanel {
         initFormEvent();
 
         add(bodyPanel, BorderLayout.CENTER);
+        
+        component = this;
 
     }
 
@@ -135,6 +142,30 @@ public class MasterRoomInputForm extends JPanel {
         groupDescription = new TextInputGroup();
         groupDescription.setTitleText("Deskripsi");
         inputPanel.add(groupDescription, "growx, span 4");
+        
+        groupImageChooser = new ImageChooserGroup();
+        groupImageChooser.setTitleText("Gambar gedung/ruangan");
+        groupImageChooser.setBtnDeleteEvent(new ButtonEvent() {
+            @Override
+            public void onClick(ActionEvent ae) {
+                Dialog confirm = new Dialog();
+                confirm.setMessageType(JOptionPane.QUESTION_MESSAGE);
+                confirm.setOptionType(JOptionPane.YES_NO_CANCEL_OPTION);
+                confirm.setMessage("Apakah Anda yakin ingin menghapus gambar ini?");
+                
+                if (!confirm.show(component).equals(JOptionPane.YES_OPTION)) {
+                    return;
+                }
+                
+                room.deleteUploadedImage();
+                groupImageChooser.cancelSelected(true);
+                
+                Dialog info = new Dialog();
+                info.setMessage("Gambar berhasil dihapus");
+                info.show(component);
+            }
+        });
+        inputPanel.add(groupImageChooser, "growx, span 4, wrap");
 
         formPanel.add(inputPanel, "wrap");
 
@@ -253,6 +284,7 @@ public class MasterRoomInputForm extends JPanel {
         groupName.getInputField().setText("");
         groupCapacity.getInputField().setText("");
         groupDescription.getInputField().setText("");
+        groupImageChooser.cancelSelected();
 
         groupId.hideError();
         groupName.hideError();
@@ -290,6 +322,7 @@ public class MasterRoomInputForm extends JPanel {
         String capacity = groupCapacity.getInputValue();
         String description = groupDescription.getInputValue();
         Long typeId = ((TypeComboBoxItem) cbType.getInputField().getSelectedItem()).getModel().getId();
+        File imageFile = groupImageChooser.getSelectedFile();
 
         List<FacilityRoom> facilityRoom = new ArrayList<>();
 
@@ -315,6 +348,7 @@ public class MasterRoomInputForm extends JPanel {
         room.setName(name);
         room.setCapacity(capacity.isEmpty() ? 0 : Integer.valueOf(capacity));
         room.setDescription(description);
+        room.setImageFile(imageFile);
 
         try {
             Validation formValidation = new Validation()
@@ -360,6 +394,7 @@ public class MasterRoomInputForm extends JPanel {
         groupName.getInputField().setText(room.getName());
         groupCapacity.getInputField().setText(room.getCapacity().toString());
         groupDescription.getInputField().setText(room.getDescription());
+        groupImageChooser.setCurrentPath(room.getImagePath());
 
         if (isReadOnly) {
             initReadOnly();
@@ -388,6 +423,8 @@ public class MasterRoomInputForm extends JPanel {
     private TextInputGroup groupId;
     private Button cmdSave;
     private Button cmdClear;
+    
+    private ImageChooserGroup groupImageChooser;
 
     private ComboBoxInputGroup<TypeComboBoxItem> cbType;
     private List<Boolean> facilityItemStatus = new ArrayList<>();
