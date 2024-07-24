@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.util.validation.rule;
 
 import javax.swing.JPasswordField;
@@ -10,7 +6,6 @@ import main.application.components.DateTimeInputField;
 
 /**
  *
- * @author aldes
  */
 public class RuleNotEmpty implements Rule {
 

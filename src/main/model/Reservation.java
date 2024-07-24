@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.model;
 
 import java.sql.ResultSet;
@@ -20,7 +16,6 @@ import main.util.query.clause.OrderByClause;
 
 /**
  *
- * @author aldes
  */
 public class Reservation extends Model {
 

@@ -24,7 +24,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author aldes
  */
 public class ActivityLogReportForm extends JPanel {
     

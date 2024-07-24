@@ -22,7 +22,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author aldes
  */
 public class RoomReportForm extends JPanel {
     

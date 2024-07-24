@@ -5,7 +5,6 @@ import javax.swing.JPasswordField;
 
 /**
  *
- * @author aldes
  */
 public class PasswordInputGroup extends InputGroup {
 

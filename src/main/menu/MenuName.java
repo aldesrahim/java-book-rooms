@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
 package main.menu;
 
 import main.application.forms.masterconsumption.MasterConsumptionForm;
@@ -18,7 +14,6 @@ import main.application.forms.reservation.ReservationForm;
 
 /**
  *
- * @author aldes
  */
 public enum MenuName {
     DASHBOARD, MASTER_TYPE, MASTER_FACILITY, MASTER_ROOM, MASTER_CONSUMPTION, MASTER_USER, RESERVATION, REPORT_RESERVATION, REPORT_ROOM, REPORT_CONSUMPTION, REPORT_ACTIVITY_LOG;

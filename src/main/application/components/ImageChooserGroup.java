@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.application.components;
 
 import com.formdev.flatlaf.util.UIScale;
@@ -30,7 +26,6 @@ import org.jdesktop.swingx.VerticalLayout;
 
 /**
  *
- * @author aldes
  */
 public class ImageChooserGroup extends JPanel {
 
@@ -167,6 +162,10 @@ public class ImageChooserGroup extends JPanel {
         
         if (currentPath != null && !force) {
             setCurrentPath(currentPath);
+        }
+
+        if (currentPath != null && force) {
+            currentPath = null;
         }
     }
 

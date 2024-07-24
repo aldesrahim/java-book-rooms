@@ -29,7 +29,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author aldes
  */
 public class ReservationReportForm extends JPanel {
 

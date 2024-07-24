@@ -8,7 +8,6 @@ import main.model.table.TableModel;
 
 /**
  *
- * @author aldes
  */
 public class TableActionCellEditor extends DefaultCellEditor {
 

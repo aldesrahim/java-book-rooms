@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package main.application.forms.reservation;
 
 import java.sql.SQLException;
@@ -20,7 +16,6 @@ import main.util.Dialog;
 
 /**
  *
- * @author aldes
  */
 public class ReservationForm extends JPanel {
 

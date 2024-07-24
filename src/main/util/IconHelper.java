@@ -6,7 +6,6 @@ import java.awt.Color;
 
 /**
  *
- * @author aldes
  */
 public class IconHelper {
     public static FlatSVGIcon getIcon(String iconName) {

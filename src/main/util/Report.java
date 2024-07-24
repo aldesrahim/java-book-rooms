@@ -16,7 +16,6 @@ import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
- * @author aldes
  */
 public class Report {
 

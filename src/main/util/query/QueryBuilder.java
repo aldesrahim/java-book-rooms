@@ -21,7 +21,6 @@ import main.util.query.clause.WhereInClause;
 
 /**
  *
- * @author aldes
  */
 public class QueryBuilder {
 

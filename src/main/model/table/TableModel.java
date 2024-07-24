@@ -7,7 +7,6 @@ import main.application.components.table.cell.TableActionVisibility;
 
 /**
  *
- * @author aldes
  * @param <T>
  */
 public abstract class TableModel<T> extends AbstractTableModel {

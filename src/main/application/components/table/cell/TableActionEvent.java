@@ -2,7 +2,6 @@ package main.application.components.table.cell;
 
 /**
  *
- * @author aldes
  */
 public abstract class TableActionEvent {
     public abstract void onEdit(int row);

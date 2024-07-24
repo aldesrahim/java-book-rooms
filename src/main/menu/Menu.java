@@ -12,7 +12,6 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author aldes
  */
 public class Menu extends javax.swing.JPanel {
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package main.util;
 
 import java.nio.charset.Charset;
@@ -11,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author aldes
  */
 public class Password {
     private static final Charset UTF_8 = StandardCharsets.UTF_8;

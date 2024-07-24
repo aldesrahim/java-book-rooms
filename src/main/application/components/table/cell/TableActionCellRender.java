@@ -7,7 +7,6 @@ import main.model.table.TableModel;
 
 /**
  *
- * @author aldes
  */
 public class TableActionCellRender extends DefaultTableCellRenderer {
 

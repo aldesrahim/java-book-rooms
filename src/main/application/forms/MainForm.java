@@ -14,7 +14,6 @@ import main.util.Report;
 
 /**
  *
- * @author aldes
  */
 public class MainForm extends javax.swing.JPanel {
 

@@ -12,7 +12,6 @@ import main.util.query.clause.WhereClause;
 
 /**
  *
- * @author aldes
  */
 public abstract class Model<T> {
 
